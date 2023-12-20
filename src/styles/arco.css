@@ -1,0 +1,22 @@
+/* * 卡片  */
+.arco-card-header {
+  background-color: #f4f4f4;
+}
+
+.arco-card-header .arco-card-header-title {
+  color: #2262c6;
+}
+
+/* * 数字输入框 */
+.arco-input-number.arco-input-outer {
+  width: auto;
+}
+
+.arco-input-number .arco-input-wrapper {
+  width: auto;
+}
+
+/* 输入框内容居中 */
+.arco-input-number .arco-input {
+  text-align: center;
+}

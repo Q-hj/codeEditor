@@ -1,0 +1,41 @@
+@import url('@unocss/reset/normalize.css');
+@import url('./arco.css');
+
+::-webkit-scrollbar-track {
+  background: rgb(0 0 0 / 10%);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar {
+  appearance: none;
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgb(0 0 0 / 15%);
+  transition: color 0.2s ease;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+}
+
+menu,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
