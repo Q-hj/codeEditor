@@ -1,5 +1,5 @@
 <script setup lang="ts" name="codeEditor">
-import { onMounted } from 'vue';
+import { onBeforeUnmount, onMounted } from 'vue';
 
 import { getValue, initCodeEditor } from './init';
 
@@ -7,6 +7,10 @@ onMounted(() => {
   initCodeEditor('#monaco-editor');
 
   console.log(getValue());
+});
+
+onBeforeUnmount(() => {
+  // 销毁实例
 });
 </script>
 

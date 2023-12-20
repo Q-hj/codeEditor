@@ -13,8 +13,9 @@ export default defineConfig({
     Unocss(),
     visualizer({
       open: true,
-      // gzipSize: true,
-      brotliSize: true,
+      template: 'sunburst',
+      gzipSize: true,
+      // brotliSize: true,
     }),
   ],
   resolve: {
