@@ -1,16 +1,21 @@
 <script setup lang="ts" name="codeEditor">
 import { onBeforeUnmount, onMounted } from 'vue';
 
-import { getValue, initCodeEditor } from './init';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
+
+import { initCodeEditor } from './init';
+
+let editorInstance: editor.IStandaloneCodeEditor;
 
 onMounted(() => {
-  initCodeEditor('#monaco-editor');
+  editorInstance = initCodeEditor('#monaco-editor');
 
-  console.log(getValue());
+  // console.log(editorInstance.getValue());
 });
 
 onBeforeUnmount(() => {
   // 销毁实例
+  editorInstance.dispose();
 });
 </script>
 

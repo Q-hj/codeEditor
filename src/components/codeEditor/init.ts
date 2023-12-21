@@ -1,37 +1,28 @@
-import {} from 'monaco-editor';
-
 //  基本API
-import { editor, languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
+import { editor } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
-// JavaScript 内置语言包
-// import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+// 导入worker
+import './worker';
 
-// st 内置语言包
-import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
-// c++ 内置语言包
-import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
+// 导入语言
+import { testCode } from './languages';
 
-//  内置所有语言包
-// import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
+// # 编辑器功能
 
-// 查找控件
+// 右键显示菜单
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/contextmenu.js';
+// 查找功能
 import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
+// 折叠功能
+import 'monaco-editor/esm/vs/editor/contrib/folding/folding.js';
 
-// import './worker';
+// 格式化代码
+import 'monaco-editor/esm/vs/editor/contrib/format/formatActions.js';
+// 代码联想提示
+import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
+// import 'monaco-editor/esm/vs/editor/contrib/tokenization/tokenization.js';
 
-console.log(languages.getLanguages());
-
-// languages.register({ id: 'myJavascript' });
-// languages.setMonarchTokensProvider('myJavascript', {
-//   tokenizer: {
-//     root: [
-//       [/\d+/, { token: 'keyword' }], // 数字
-//       [/[a-z]+/, { token: 'string' }], // 小写字符串
-//     ],
-//   },
-// });
-
-let instance;
+// let instance;
 
 /**
  * 编辑器初始化
@@ -39,9 +30,14 @@ let instance;
  */
 export function initCodeEditor(domName: string) {
   const dom = document.querySelector(domName) as HTMLDivElement;
-  const jsCode = ['function x() {', '\tconsole.log("Hello world!");', '}'].join(
-    '\n',
-  );
+
+  const jsCode = [
+    'function x() {',
+    '\tconsole.log("Hello world!");',
+    '\tconsole.log("123");',
+    '}',
+  ].join('\n');
+
   const cCode = [
     '#pragma warning(disable : 4532)',
     '#pragma warning(disable : 4702)',
@@ -49,9 +45,11 @@ export function initCodeEditor(domName: string) {
 
   const cssCode = ['body{', '\tmargin:0;', '}'].join('\n');
 
-  instance = editor.create(dom, {
-    value: cCode,
-    language: 'c',
+  const ILCode = ['(*Network 1*)', 'LD\t%I0.0', 'ATCH\tINT_0,'].join('\n');
+
+  return editor.create(dom, {
+    value: testCode,
+    language: 'js',
     theme: 'vs-dark',
   });
 
@@ -61,4 +59,4 @@ export function initCodeEditor(domName: string) {
 /**
  * 获取编辑器内容
  */
-export const getValue = (): string => instance!.getValue();
+// export const getValue = (): string => instance!.getValue();
