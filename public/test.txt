@@ -1,0 +1,859 @@
+(* Network 0 *)
+(* Network 1 *)
+(*扫码  192.168.0.50  8803  TCP\Free*)
+LD      TRUE
+TCP_RCV %M0.0, 1, 2048, IDaddr, %QW0, IDret
+(* Network 2 *)
+LD      TRUE
+GT      %VW100, 1
+TP      T20, 10
+__CR_EQ_1
+MOVE    T20, ID_T20
+__CR_RESTORE
+BLKMOVE IDaddr, NewID, B#100
+ST      ID_Bool
+(* Network 3 *)
+LDN     ID_Bool
+FILL    B#0, IDaddr, B#100
+(* Network 4 *)
+(*电源写入  192.168.0.40 502 TCP/Modbus*)
+LD      %M40.0
+TCP_MBUSW %SM0.3, 3, 16, W#2001, 16, %VW5000, 1000, 2, POW1_RET
+(* Network 5 *)
+(*RS485电源读取*)
+LD      POW_Reda
+TCP_MBUSR %SM0.3, 3, 4, W#1000, 2, 1000, 2, POW_RE, POW2_RET
+(* Network 6 *)
+(*=======================================开始上电=======================================*)
+LD      Test_st
+TP      T61, 10
+__CR_EQ_1
+MOVE    T61, %VW5100
+__CR_RESTORE
+CAL     上电
+ST      %M41.0
+(* Network 7 *)
+LD      OK
+OR      NG
+TP      T60, 10
+__CR_EQ_1
+MOVE    T60, %VW5200
+__CR_RESTORE
+CAL     断电
+ST      %M42.0
+(* Network 8 *)
+(*=======================================初始化=======================================*)
+LD      TRUE
+CAL     通信触发
+(* Network 9 *)
+LD      TRUE
+CAL     模拟量采集
+(* Network 10 *)
+(*===========================================开始测试=======================================*)
+LD      ID_Bool
+OR      Test_st
+ST      Test_st
+(* Network 11 *)
+(*===========================================测试功能1 48V TP28  =======================================*)
+LD      Test_st
+TON     T50, 10
+__CR_EQ_1
+MOVE    T50, T50_T
+__CR_RESTORE
+ANDN    test1OK
+ANDN    test1NG
+MOVE    AD1_1_1_1, AD1_Save
+ST      %M21.0
+(* Network 12 *)
+LD      %M21.0
+GT      AD1_1_1_1, 2.0
+LT      AD1_1_1_1, 6.0
+ST      test1OK_1
+(* Network 13 *)
+LD      %M21.0
+GT      AD1_1_1_1, 6.0
+ST      test1NG1
+(* Network 14 *)
+LD      %M21.0
+LT      AD1_1_1_1, 2.0
+ST      test1NG2
+(* Network 15 *)
+LD      test1NG1
+OR      test1NG2
+AND     Test_st
+ST      test1NG_1
+(* Network 16 *)
+(*测试项1  OK*)
+LD      test1OK_1
+OR      test1OK
+AND     Test_st
+ANDN    test1NG
+ST      test1OK
+(* Network 17 *)
+(*测试项1  NG*)
+LD      test1NG_1
+OR      test1NG
+AND     Test_st
+ANDN    test1OK
+ST      test1NG
+(* Network 18 *)
+(*====================================测试功能2  15V  TP36  TP12/15/13/17/7/8=======================================*)
+LD      test1OK
+TON     T51, 10
+__CR_EQ_1
+MOVE    T51, T51_T
+__CR_RESTORE
+ANDN    test2OK
+ANDN    test2NG
+MOVE    AD2_1_1_1, AD2_Save
+MOVE    %VR3224, %VR3232
+MOVE    %VR3324, %VR3332
+MOVE    %VR3424, %VR3432
+MOVE    %VR3524, %VR3532
+MOVE    %VR3624, %VR3632
+MOVE    %VR3724, %VR3732
+ST      %M22.0
+(* Network 19 *)
+LD      %M22.0
+GT      AD2_1_1_1, 2.0
+GT      %VR3224, 2.0
+GT      %VR3324, 2.0
+GT      %VR3424, 2.0
+GT      %VR3524, 2.0
+GT      %VR3624, 2.0
+GT      %VR3724, 2.0
+ST      %M80.1
+(* Network 20 *)
+LD      %M80.1
+LT      AD2_1_1_1, 6.0
+LT      %VR3224, 6.0
+LT      %VR3324, 6.0
+LT      %VR3424, 6.0
+LT      %VR3524, 6.0
+LT      %VR3624, 6.0
+LT      %VR3724, 6.0
+ST      test2OK_1
+(* Network 21 *)
+LD      %M22.0
+GT      AD2_1_1_1, 6.0
+OR(
+LD      %M22.0
+GT      %VR3224, 6.0
+)
+OR(
+LD      %M22.0
+GT      %VR3324, 6.0
+)
+OR(
+LD      %M22.0
+GT      %VR3424, 6.0
+)
+OR(
+LD      %M22.0
+GT      %VR3524, 6.0
+)
+OR(
+LD      %M22.0
+GT      %VR3624, 6.0
+)
+OR(
+LD      %M22.0
+GT      %VR3724, 6.0
+)
+ST      test2NG1
+(* Network 22 *)
+LD      %M22.0
+LT      AD2_1_1_1, 2.0
+OR(
+LD      %M22.0
+LT      %VR3224, 2.0
+)
+OR(
+LD      %M22.0
+LT      %VR3324, 2.0
+)
+OR(
+LD      %M22.0
+LT      %VR3424, 2.0
+)
+OR(
+LD      %M22.0
+LT      %VR3524, 2.0
+)
+OR(
+LD      %M22.0
+LT      %VR3624, 2.0
+)
+OR(
+LD      %M22.0
+LT      %VR3724, 2.0
+)
+ST      test2NG2
+(* Network 23 *)
+LD      test2NG1
+OR      test2NG2
+AND     Test_st
+ST      test2NG_1
+(* Network 24 *)
+(*测试项2  OK*)
+LD      test2OK_1
+OR      test2OK
+AND     Test_st
+ANDN    test2NG
+ST      test2OK
+(* Network 25 *)
+(*测试项2  NG*)
+LD      test2NG_1
+OR      test2NG
+AND     Test_st
+ANDN    test2OK
+ST      test2NG
+(* Network 26 *)
+(*===========================================测试功能3  3.3V  TP37=======================================*)
+LD      test2OK
+TON     T52, 10
+__CR_EQ_1
+MOVE    T52, %VW634
+__CR_RESTORE
+ANDN    %V632.0
+ANDN    %V633.0
+MOVE    %VR616, %VR636
+ST      %V631.3
+(* Network 27 *)
+LD      %V631.3
+GT      %VR616, 2.0
+LT      %VR616, 6.0
+ST      %V630.0
+(* Network 28 *)
+LD      %V631.3
+GT      %VR616, 6.0
+ST      %V631.1
+(* Network 29 *)
+LD      %V631.3
+LT      %VR616, 2.0
+ST      %V631.2
+(* Network 30 *)
+LD      %V631.1
+OR      %V631.2
+AND     Test_st
+ST      %V631.0
+(* Network 31 *)
+(*测试项3  OK*)
+LD      %V630.0
+OR      %V632.0
+AND     Test_st
+ANDN    %V633.0
+ST      %V632.0
+(* Network 32 *)
+(*测试项3  NG*)
+LD      %V631.0
+OR      %V633.0
+AND     Test_st
+ANDN    %V632.0
+ST      %V633.0
+(* Network 33 *)
+(*===========================================测试功能4   5V  TP98 TP14 T43=======================================*)
+LD      %V632.0
+TON     T53, 10
+__CR_EQ_1
+MOVE    T53, %VW734
+__CR_RESTORE
+ANDN    %V732.0
+ANDN    %V733.0
+MOVE    %VR716, %VR736
+MOVE    %VR816, %VR836
+MOVE    %VR916, %VR936
+ST      %V731.3
+(* Network 34 *)
+LD      %V731.3
+GT      %VR716, 2.0
+GT      %VR816, 2.0
+GT      %VR916, 2.0
+ST      %V730.1
+(* Network 35 *)
+LD      %V731.3
+LT      %VR716, 6.0
+LT      %VR816, 6.0
+LT      %VR916, 6.0
+ST      %V730.2
+(* Network 36 *)
+LD      %V731.3
+GT      %VR716, 6.0
+OR(
+LD      %V731.3
+GT      %VR816, 6.0
+)
+OR(
+LD      %V731.3
+GT      %VR916, 6.0
+)
+ST      %V731.1
+(* Network 37 *)
+LD      %V731.3
+LT      %VR716, 2.0
+OR(
+LD      %V731.3
+LT      %VR816, 2.0
+)
+OR(
+LD      %V731.3
+LT      %VR916, 2.0
+)
+ST      %V731.2
+(* Network 38 *)
+LD      %V730.1
+OR      %V730.2
+AND     Test_st
+ST      %V730.0
+(* Network 39 *)
+LD      %V731.1
+OR      %V731.2
+AND     Test_st
+ST      %V731.0
+(* Network 40 *)
+(*测试项4  OK*)
+LD      %V730.0
+OR      %V732.0
+AND     Test_st
+ANDN    %V733.0
+ST      %V732.0
+(* Network 41 *)
+(*测试项4  NG*)
+LD      %V731.0
+OR      %V733.0
+AND     Test_st
+ANDN    %V732.0
+ST      %V733.0
+(* Network 42 *)
+(*===========================================测试功能5   1.65V  TP90  TP93  TP21  TP47 =======================================*)
+LD      %V732.0
+TON     T54, 10
+__CR_EQ_1
+MOVE    T54, %VW1134
+__CR_RESTORE
+ANDN    %V1132.0
+ANDN    %V1133.0
+MOVE    %VR1116, %VR1136
+MOVE    %VR1216, %VR1236
+MOVE    %VR1316, %VR1336
+MOVE    %VR1416, %VR1436
+ST      %V1131.3
+(* Network 43 *)
+LD      %V1131.3
+GT      %VR1116, 2.0
+GT      %VR1216, 2.0
+GT      %VR1316, 2.0
+GT      %VR1416, 2.0
+ST      %V1130.1
+(* Network 44 *)
+LD      %V1131.3
+LT      %VR1116, 6.0
+LT      %VR1216, 6.0
+LT      %VR1316, 6.0
+LT      %VR1416, 6.0
+ST      %V1130.2
+(* Network 45 *)
+LD      %V1131.3
+GT      %VR1116, 6.0
+OR(
+LD      %V1131.3
+GT      %VR1216, 6.0
+)
+OR(
+LD      %V1131.3
+GT      %VR1316, 6.0
+)
+OR(
+LD      %V1131.3
+GT      %VR1416, 6.0
+)
+ST      %V1131.1
+(* Network 46 *)
+LD      %V1131.3
+LT      %VR1116, 2.0
+OR(
+LD      %V1131.3
+LT      %VR1216, 2.0
+)
+OR(
+LD      %V1131.3
+LT      %VR1316, 2.0
+)
+OR(
+LD      %V1131.3
+LT      %VR1416, 2.0
+)
+ST      %V1131.2
+(* Network 47 *)
+LD      %V1130.1
+OR      %V1130.2
+AND     Test_st
+ST      %V1130.0
+(* Network 48 *)
+LD      %V1131.1
+OR      %V1131.2
+AND     Test_st
+ST      %V1131.0
+(* Network 49 *)
+(*测试项5  OK*)
+LD      %V1130.0
+OR      %V1132.0
+AND     Test_st
+ANDN    %V1133.0
+ST      %V1132.0
+(* Network 50 *)
+(*测试项5  NG*)
+LD      %V1131.0
+OR      %V1133.0
+AND     Test_st
+ANDN    %V1132.0
+ST      %V1133.0
+(* Network 51 *)
+(*===========================================测试功能6  1.86V  TP2 =======================================*)
+LD      %V1132.0
+TON     T55, 10
+__CR_EQ_1
+MOVE    T55, %VW1534
+__CR_RESTORE
+ANDN    %V1532.0
+ANDN    %V1533.0
+MOVE    %VR1516, %VR1536
+ST      %V1531.3
+(* Network 52 *)
+LD      %V1531.3
+GT      %VR1516, 2.0
+LT      %VR1516, 6.0
+ST      %V1530.0
+(* Network 53 *)
+LD      %V1531.3
+GT      %VR1516, 6.0
+ST      %V1531.1
+(* Network 54 *)
+LD      %V1531.3
+LT      %VR1516, 2.0
+ST      %V1531.2
+(* Network 55 *)
+LD      %V1531.1
+OR      %V1531.2
+AND     Test_st
+ST      %V1531.0
+(* Network 56 *)
+(*测试项6  OK*)
+LD      %V1530.0
+OR      %V1532.0
+AND     Test_st
+ANDN    %V1533.0
+ST      %V1532.0
+(* Network 57 *)
+(*测试项6  NG*)
+LD      %V1531.0
+OR      %V1533.0
+AND     Test_st
+ANDN    %V1532.0
+ST      %V1533.0
+(* Network 58 *)
+(*===========================================测试功能7 2.5V  TP3  TP65=======================================*)
+LD      %V1532.0
+TON     T56, 10
+__CR_EQ_1
+MOVE    T56, %VW1634
+__CR_RESTORE
+ANDN    %V1632.0
+ANDN    %V1633.0
+MOVE    %VR1616, %VR1636
+MOVE    %VR1716, %VR1736
+ST      %V1631.3
+(* Network 59 *)
+LD      %V1631.3
+GT      %VR1616, 2.0
+GT      %VR1716, 2.0
+ST      %V1630.1
+(* Network 60 *)
+LD      %V1631.3
+LT      %VR1616, 6.0
+LT      %VR1716, 6.0
+ST      %V1630.2
+(* Network 61 *)
+LD      %V1631.3
+GT      %VR1616, 6.0
+OR(
+LD      %V1631.3
+GT      %VR1716, 6.0
+)
+ST      %V1631.1
+(* Network 62 *)
+LD      %V1631.3
+LT      %VR1616, 2.0
+OR(
+LD      %V1631.3
+LT      %VR1716, 2.0
+)
+ST      %V1631.2
+(* Network 63 *)
+LD      %V1630.1
+OR      %V1630.2
+AND     Test_st
+ST      %V1630.0
+(* Network 64 *)
+LD      %V1631.1
+OR      %V1631.2
+AND     Test_st
+ST      %V1631.0
+(* Network 65 *)
+(*测试项7  OK*)
+LD      %V1630.0
+OR      %V1632.0
+AND     Test_st
+ANDN    %V1633.0
+ST      %V1632.0
+(* Network 66 *)
+(*测试项7  NG*)
+LD      %V1631.0
+OR      %V1633.0
+AND     Test_st
+ANDN    %V1632.0
+ST      %V1633.0
+(* Network 67 *)
+(*===========================================测试功能8  2.25V  TP51  TP85/TP86=======================================*)
+LD      %V1632.0
+TON     T57, 10
+__CR_EQ_1
+MOVE    T57, %VW1834
+__CR_RESTORE
+ANDN    %V1832.0
+ANDN    %V1833.0
+MOVE    %VR1816, %VR1836
+MOVE    %VR1916, %VR1936
+ST      %V1831.3
+(* Network 68 *)
+LD      %V1831.3
+GT      %VR1816, 2.0
+GT      %VR1816, 2.0
+ST      %V1830.1
+(* Network 69 *)
+LD      %V1831.3
+LT      %VR1816, 6.0
+LT      %VR1816, 6.0
+ST      %V1830.2
+(* Network 70 *)
+LD      %V1831.3
+GT      %VR1816, 6.0
+OR(
+LD      %V1831.3
+GT      %VR1916, 6.0
+)
+ST      %V1831.1
+(* Network 71 *)
+LD      %V1831.3
+LT      %VR1816, 2.0
+OR(
+LD      %V1831.3
+LT      %VR1916, 2.0
+)
+ST      %V1831.2
+(* Network 72 *)
+LD      %V1830.1
+OR      %V1830.2
+AND     Test_st
+ST      %V1830.0
+(* Network 73 *)
+LD      %V1831.1
+OR      %V1831.2
+AND     Test_st
+ST      %V1831.0
+(* Network 74 *)
+(*测试项8  OK*)
+LD      %V1830.0
+OR      %V1832.0
+AND     Test_st
+ANDN    %V1833.0
+ST      %V1832.0
+(* Network 75 *)
+(*测试项8  NG*)
+LD      %V1831.0
+OR      %V1833.0
+AND     Test_st
+ANDN    %V1832.0
+ST      %V1833.0
+(* Network 76 *)
+(*===========================================测试功能9   2V  TP64=======================================*)
+LD      %V1832.0
+TON     T58, 10
+__CR_EQ_1
+MOVE    T58, %VW2034
+__CR_RESTORE
+ANDN    %V2032.0
+ANDN    %V2033.0
+MOVE    %VR2016, %VR2036
+ST      %V2031.3
+(* Network 77 *)
+LD      %V2031.3
+GT      %VR2016, 2.0
+LT      %VR2016, 6.0
+ST      %V2030.0
+(* Network 78 *)
+LD      %V2031.3
+GT      %VR2016, 6.0
+ST      %V2031.1
+(* Network 79 *)
+LD      %V2031.3
+LT      %VR2016, 2.0
+ST      %V2031.2
+(* Network 80 *)
+LD      %V2031.1
+OR      %V2031.2
+AND     Test_st
+ST      %V2031.0
+(* Network 81 *)
+(*测试项9  OK*)
+LD      %V2030.0
+OR      %V2032.0
+AND     Test_st
+ANDN    %V2033.0
+ST      %V2032.0
+(* Network 82 *)
+(*测试项9  NG*)
+LD      %V2031.0
+OR      %V2033.0
+AND     Test_st
+ANDN    %V2032.0
+ST      %V2033.0
+(* Network 83 *)
+(*===========================================测试功能10   3.6V  TP70/71/75/74/87/88/81/89/43/42=======================================*)
+LD      TRUE
+ST      %Q0.0
+(* Network 84 *)
+LD      TRUE
+ST      %Q0.1
+(* Network 85 *)
+LD      TRUE
+ST      %Q0.2
+(* Network 86 *)
+LD      TRUE
+ST      %Q0.3
+(* Network 87 *)
+LD      TRUE
+ST      %Q0.4
+(* Network 88 *)
+LD      TRUE
+ST      %Q0.5
+(* Network 89 *)
+LD      TRUE
+ST      %Q0.6
+(* Network 90 *)
+LD      TRUE
+ST      %Q0.7
+(* Network 91 *)
+LD      TRUE
+ST      %Q1.0
+(* Network 92 *)
+LD      TRUE
+ST      %Q1.1
+(* Network 93 *)
+(*===========================================测试功能10=======================================*)
+LD      %V2032.0
+TON     T59, 10
+__CR_EQ_1
+MOVE    T59, %VW1134
+__CR_RESTORE
+ANDN    %V1932.0
+ANDN    %V1933.0
+MOVE    %VR2116, %VR2136
+MOVE    %VR2216, %VR2236
+MOVE    %VR2316, %VR2336
+MOVE    %VR2416, %VR2436
+MOVE    %VR2516, %VR2536
+ST      %V1931.4
+(* Network 94 *)
+LD      %V1931.4
+MOVE    %VR2616, %VR2636
+MOVE    %VR2716, %VR2736
+MOVE    %VR2816, %VR2836
+MOVE    %VR2916, %VR2936
+MOVE    %VR3016, %VR3036
+ST      %V1931.3
+(* Network 95 *)
+LD      %V1931.3
+GT      %VR2116, 3.0
+GT      %VR2216, 3.0
+GT      %VR2316, 3.0
+GT      %VR2416, 3.0
+GT      %VR2516, 3.0
+ST      %V1931.5
+(* Network 96 *)
+LD      %V1931.5
+GT      %VR2616, 3.0
+GT      %VR2716, 3.0
+GT      %VR2816, 3.0
+GT      %VR2916, 3.0
+GT      %VR3016, 3.0
+ST      %V1931.6
+(* Network 97 *)
+LD      %V1931.6
+LT      %VR2116, 6.0
+LT      %VR2216, 6.0
+LT      %VR2316, 6.0
+LT      %VR2416, 6.0
+LT      %VR2516, 6.0
+ST      %V1931.7
+(* Network 98 *)
+LD      %V1931.7
+LT      %VR2616, 6.0
+LT      %VR2716, 6.0
+LT      %VR2816, 6.0
+LT      %VR2916, 6.0
+LT      %VR3016, 6.0
+ST      %V1930.0
+(* Network 99 *)
+LD      %V1931.3
+GT      %VR2116, 6.0
+OR(
+LD      %V1931.3
+GT      %VR2216, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR2316, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR2416, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR2516, 6.0
+)
+ST      %V1930.1
+(* Network 100 *)
+LD      %V1931.3
+GT      %VR2616, 6.0
+OR(
+LD      %V1931.3
+GT      %VR2716, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR2816, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR2916, 6.0
+)
+OR(
+LD      %V1931.3
+GT      %VR3016, 6.0
+)
+ST      %V1930.2
+(* Network 101 *)
+LD      %V1931.3
+LT      %VR2116, 3.0
+OR(
+LD      %V1931.3
+LT      %VR2216, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR2316, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR2416, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR2516, 3.0
+)
+ST      %V1930.3
+(* Network 102 *)
+LD      %V1931.3
+LT      %VR2616, 3.0
+OR(
+LD      %V1931.3
+LT      %VR2716, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR2816, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR2916, 3.0
+)
+OR(
+LD      %V1931.3
+LT      %VR3016, 3.0
+)
+ST      %V1930.4
+(* Network 103 *)
+LD      %V1930.1
+OR      %V1930.2
+OR      %V1930.3
+OR      %V1930.4
+OR      %V1931.0
+AND     Test_st
+ST      %V1931.0
+(* Network 104 *)
+(*测试项10  OK*)
+LD      %V1930.0
+OR      %V1932.0
+AND     Test_st
+ANDN    %V1933.0
+ST      %V1932.0
+(* Network 105 *)
+(*测试项10  NG*)
+LD      %V1931.0
+OR      %V1933.0
+AND     Test_st
+ANDN    %V1932.0
+ST      %V1933.0
+(* Network 106 *)
+(*===========================================  测试完成  =======================================*)
+LD      test1OK
+AND     test2OK
+AND     %V632.0
+AND     %V732.0
+AND     %V1132.0
+AND     %V1532.0
+AND     %V1632.0
+AND     %V1832.0
+AND     %V2032.0
+AND     %V1932.0
+OR(
+LD      OK
+ANDN    ID_Bool
+)
+ANDN    NG
+TON     T62, 20
+__CR_EQ_1
+MOVE    T62, %VW1234
+__CR_RESTORE
+ST      OK
+(* Network 107 *)
+LD      test1NG
+OR      test2NG
+OR      %V633.0
+OR      %V733.0
+OR      %V1133.0
+OR      %V1533.0
+OR      %V1633.0
+OR      %V1833.0
+OR      %V2033.0
+OR      %V1933.0
+OR(
+LD      NG
+ANDN    ID_Bool
+)
+ANDN    OK
+ST      NG
+(* Network 108 *)
+LD      OK
+OR      NG
+TON     T21, 20
+__CR_EQ_1
+MOVE    T21, %VW6000
+__CR_RESTORE
+TP      T23, 10
+__CR_EQ_1
+MOVE    T23, %VW6002
+__CR_RESTORE
+R       Test_st

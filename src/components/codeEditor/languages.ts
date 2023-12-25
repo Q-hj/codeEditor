@@ -17,71 +17,96 @@ import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
 // c++ 内置语言包
 import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
 
-import custom_lang from './custom_lang';
+// 自定义高亮
+// import custom_lang from './custom_lang';
 
-const lang = 'js';
-
-export const testCode = [
-  'class MyClass {',
-  '  @attribute',
-  '  void main() {',
-  '    Console.writeln( "Hello Monarch world");',
-  '  // 这是注释',
-  '  for',
-  '  }',
-  '}',
-].join('\n');
+const lang = 'IL';
 
 // 注册自定义语言
 languages.register({ id: lang });
 
 // 为该自定义语言基本的Token
-languages.setMonarchTokensProvider(
-  lang,
-  custom_lang || {
-    // API: languages.IMonarchLanguage
+export const token = languages.setMonarchTokensProvider(lang, {
+  // API: languages.IMonarchLanguage
 
-    // defaultToken: 'invalid',
-    keywords: ['IF', 'THEN', 'END', 'WHILE', 'DO', 'ELSE'],
-    typeKeywords: [],
-    operators: [
-      '=',
-      '>',
-      '<',
-      '==',
-      '<=',
-      '>=',
-      '!=',
-      '<>',
-      '+',
-      '-',
-      '*',
-      '/',
-    ],
-    digits: /\d+(_+\d+)*/,
-    octaldigits: /[0-7]+(_+[0-7]+)*/,
-    binarydigits: /[0-1]+(_+[0-1]+)*/,
-    hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
+  // 是否忽略大小写
+  ignoreCase: true,
 
-    // 标记器 从字符串映射到ILanguageRule[]
-    tokenizer: {
-      root: [
-        // [/\(\*Network 1\*\)/, { token: 'key' }],
-        //   [/(['"]).*?\1/, { token: 'rematch' }], //字符串
-        //   [/\d+/, { token: 'number' }], // 数字
-        //   [/[a-zA-Z]+/, { token: 'string' }], // 字母
+  // defaultToken: 'invalid',
+
+  // 关键字
+  keywords: [
+    'MOVE',
+    'R',
+    'BLKMOVE',
+    'TON',
+    'LD',
+    'GT',
+    'TP',
+    'OR',
+    'LT',
+    'AND',
+    'ST',
+    'LDN',
+    'FILL',
+    'CAL',
+    'ANDN',
+    'TCP_MBUSW',
+    'TCP_MBUSR',
+    'TCP_RCV',
+    '__CR_EQ_1',
+    '__CR_RESTORE',
+  ],
+
+  function: [],
+
+  // 类型关键字
+  typeKeywords: ['TRUE'],
+
+  // 操作符
+  operators: [],
+
+  // 数字
+  digits: /\d+(_+\d+)*/,
+  octaldigits: /[0-7]+(_+[0-7]+)*/,
+  binarydigits: /[0-1]+(_+[0-1]+)*/,
+  hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
+
+  // 分词器
+  tokenizer: {
+    root: [
+      [
+        /[a-zA-Z_$][\w$]*/,
+        {
+          cases: {
+            '@keywords': 'keyword',
+            '@typeKeywords': 'keyword',
+            '@default': 'identifier',
+          },
+        },
       ],
-    },
+      // 匹配%
+      [/%/, { token: 'key' }],
+      // 匹配Network
+      [/\(\*\s*Network\s*\d+\s*\*\)/, { token: 'string' }],
+      // 注释
+      [/\(\*.*?\*\)/, { token: 'comment' }],
+
+      // 匹配括号
+      [/\(|\)/, { token: 'keyword' }],
+      //   [/(['"]).*?\1/, { token: 'rematch' }], //字符串
+      //   [/\d+/, { token: 'number' }], // 数字
+      //   [/[a-zA-Z]+/, { token: 'string' }], // 字母
+    ],
   },
-);
+});
 
 // 为该语言注册一个代码提示器
-languages.registerCompletionItemProvider(lang, {
+export const suggestions = languages.registerCompletionItemProvider(lang, {
   // provideCompletionItems: () => {
   //   return { suggestions: custom_completion };
   // },
   provideCompletionItems: (model, position) => {
-    console.log(123);
     const word = model.getWordUntilPosition(position);
     const range = {
       startLineNumber: position.lineNumber,
@@ -126,5 +151,3 @@ languages.registerCompletionItemProvider(lang, {
     return { suggestions };
   },
 });
-
-// console.log(languages.getLanguages());
