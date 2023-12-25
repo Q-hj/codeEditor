@@ -10,17 +10,14 @@ import { testCode } from './languages';
 // # 编辑器功能
 
 // 右键显示菜单
-import 'monaco-editor/esm/vs/editor/contrib/contextmenu/contextmenu.js';
+import 'monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js';
 // 查找功能
-import 'monaco-editor/esm/vs/editor/contrib/find/findController.js';
+import 'monaco-editor/esm/vs/editor/contrib/find/browser/findController.js';
 // 折叠功能
-import 'monaco-editor/esm/vs/editor/contrib/folding/folding.js';
+import 'monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js';
 
 // 格式化代码
-import 'monaco-editor/esm/vs/editor/contrib/format/formatActions.js';
-// 代码联想提示
-import 'monaco-editor/esm/vs/editor/contrib/suggest/suggestController.js';
-// import 'monaco-editor/esm/vs/editor/contrib/tokenization/tokenization.js';
+import 'monaco-editor/esm/vs/editor/contrib/format/browser/formatActions.js';
 
 // let instance;
 

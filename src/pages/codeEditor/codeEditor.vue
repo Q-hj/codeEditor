@@ -4,8 +4,8 @@ import CodeEditor from '@/components/codeEditor/codeEditor.vue';
 
 <template>
   <section>
-    <h1>codeEditor</h1>
-    <CodeEditor />
+    <!-- <h1>codeEditor</h1> -->
+    <CodeEditor style="height: 700px" />
   </section>
 </template>
 <style lang="less" scoped></style>

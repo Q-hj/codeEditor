@@ -1,12 +1,16 @@
 import { languages } from 'monaco-editor/esm/vs/editor/editor.api.js';
 
+// # 代码联想提示
+import 'monaco-editor/esm/vs/editor/contrib/suggest/browser/suggestController.js';
+// import 'monaco-editor/esm/vs/editor/contrib/tokenization/browser/tokenization.js';
+
 // # 语言包：代码高亮、提示
 
 //  内置所有语言包
 // import 'monaco-editor/esm/vs/basic-languages/monaco.contribution';
 
 // JavaScript 内置语言包
-import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
+// import 'monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution';
 
 // st 内置语言包
 import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
@@ -14,8 +18,6 @@ import 'monaco-editor/esm/vs/basic-languages/st/st.contribution';
 import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
 
 import custom_lang from './custom_lang';
-
-console.log(languages.getLanguages());
 
 const lang = 'js';
 
@@ -37,6 +39,8 @@ languages.register({ id: lang });
 languages.setMonarchTokensProvider(
   lang,
   custom_lang || {
+    // API: languages.IMonarchLanguage
+
     // defaultToken: 'invalid',
     keywords: ['IF', 'THEN', 'END', 'WHILE', 'DO', 'ELSE'],
     typeKeywords: [],
@@ -59,7 +63,7 @@ languages.setMonarchTokensProvider(
     binarydigits: /[0-1]+(_+[0-1]+)*/,
     hexdigits: /[[0-9a-fA-F]+(_+[0-9a-fA-F]+)*/,
 
-    // 标记器
+    // 标记器 从字符串映射到ILanguageRule[]
     tokenizer: {
       root: [
         // [/\(\*Network 1\*\)/, { token: 'key' }],
@@ -77,6 +81,7 @@ languages.registerCompletionItemProvider(lang, {
   //   return { suggestions: custom_completion };
   // },
   provideCompletionItems: (model, position) => {
+    console.log(123);
     const word = model.getWordUntilPosition(position);
     const range = {
       startLineNumber: position.lineNumber,
@@ -90,7 +95,7 @@ languages.registerCompletionItemProvider(lang, {
       {
         label: 'cxk',
         kind: languages.CompletionItemKind.Text,
-        insertText: '唱、跳、rap、篮球',
+        insertText: 'rap',
         insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
         range,
       },
@@ -121,3 +126,5 @@ languages.registerCompletionItemProvider(lang, {
     return { suggestions };
   },
 });
+
+// console.log(languages.getLanguages());
