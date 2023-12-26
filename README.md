@@ -9,3 +9,10 @@
 ### 语法提示
 
 > 可通过 languages.registerCompletionItemProvider 为对应语言进行代码提示配置。
+
+## todo
+
+- 导航菜单
+  - 字体调整
+  - 主题切换
+  - 语言切换

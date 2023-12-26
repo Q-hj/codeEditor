@@ -30,8 +30,7 @@ body {
   height: 100vh;
 }
 
-menu,
-ul {
+* {
   margin: 0;
   padding: 0;
 }

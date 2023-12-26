@@ -20,6 +20,8 @@ import 'monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution';
 // 自定义高亮
 // import custom_lang from './custom_lang';
 
+import { Suggestion } from './type';
+
 const lang = 'IL';
 
 // 注册自定义语言
@@ -102,52 +104,107 @@ export const token = languages.setMonarchTokensProvider(lang, {
 });
 
 // 为该语言注册一个代码提示器
-export const suggestions = languages.registerCompletionItemProvider(lang, {
-  // provideCompletionItems: () => {
-  //   return { suggestions: custom_completion };
-  // },
-  provideCompletionItems: (model, position) => {
-    const word = model.getWordUntilPosition(position);
-    const range = {
-      startLineNumber: position.lineNumber,
-      endLineNumber: position.lineNumber,
-      startColumn: word.startColumn,
-      endColumn: word.endColumn,
-    };
+// export const suggestions = languages.registerCompletionItemProvider(lang, {
+//   provideCompletionItems: (model, position) => {
+//     const word = model.getWordUntilPosition(position);
+//     const range = {
+//       startLineNumber: position.lineNumber,
+//       endLineNumber: position.lineNumber,
+//       startColumn: word.startColumn,
+//       endColumn: word.endColumn,
+//     };
 
-    // 将建议数组抽离到单独文件中
-    const suggestions = [
-      {
-        label: 'cxk',
-        kind: languages.CompletionItemKind.Text,
-        insertText: 'rap',
-        insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
-        range,
-      },
-      {
-        label: 'for',
-        // 详情，用于触发建议时展示
-        detail: 'For Loop',
-        // 描述
-        documentation: 'for循环',
-        // 建议类型
-        kind: languages.CompletionItemKind.Snippet,
-        // 插入内容
-        insertText: [
-          'for (let index = 0; index < array.length; index++) {',
-          '   const element = array[index];',
-          '   $1',
-          '}',
-        ].join('\n'),
+//     // 将建议数组抽离到单独文件中
+//     // const suggestions = [
+//     //   {
+//     //     label: 'cxk',
+//     //     kind: languages.CompletionItemKind.Text,
+//     //     insertText: 'rap',
+//     //     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+//     //     range,
+//     //   },
+//     //   {
+//     //     label: 'for',
+//     //     // 详情，用于触发建议时展示
+//     //     detail: 'For Loop',
+//     //     // 描述
+//     //     documentation: 'for循环',
+//     //     // 建议类型
+//     //     kind: languages.CompletionItemKind.Snippet,
+//     //     // 插入内容
+//     //     insertText: [
+//     //       'for (let index = 0; index < array.length; index++) {',
+//     //       '   const element = array[index];',
+//     //       '   $1',
+//     //       '}',
+//     //     ].join('\n'),
 
-        // 调整多行插入文本的空白/缩进以匹配当前行缩进。
-        insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+//     //     // 调整多行插入文本的空白/缩进以匹配当前行缩进。
+//     //     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
 
-        // 要被替换的文本范围
-        range,
-      },
-    ];
+//     //     // 要被替换的文本范围
+//     //     range,
+//     //   },
+//     // ];
 
-    return { suggestions };
-  },
-});
+//     const suggestions = words.map(({ label, detail }) => ({
+//       label,
+//       // 详情，用于触发建议时展示
+//       detail,
+//       // 描述
+//       documentation: detail,
+//       // 建议类型
+//       kind: languages.CompletionItemKind.Text,
+//       // 插入内容
+//       insertText: `${label.padEnd(8)}$0`,
+
+//       // 调整多行插入文本的空白/缩进以匹配当前行缩进。
+//       insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
+
+//       // 要被替换的文本范围
+//       range,
+//     }));
+
+//     return { suggestions };
+//   },
+// });
+
+/**
+ * 根据提示数组注册一个代码提示器
+ * @param suggestions 语法提示数组
+ * @returns 提示器（可销毁）
+ */
+export const registerCompletion = (suggestions: Suggestion[]) => {
+  return languages.registerCompletionItemProvider(lang, {
+    provideCompletionItems: (model, position) => {
+      const word = model.getWordUntilPosition(position);
+      const range = {
+        startLineNumber: position.lineNumber,
+        endLineNumber: position.lineNumber,
+        startColumn: word.startColumn,
+        endColumn: word.endColumn,
+      };
+
+      return {
+        suggestions: suggestions.map(({ label, detail }) => ({
+          label,
+          // 详情，用于触发建议时展示
+          detail,
+          // 描述
+          documentation: detail,
+          // 建议类型
+          kind: languages.CompletionItemKind.Text,
+          // 插入内容
+          insertText: `${label.padEnd(8)}$0`,
+
+          // 调整多行插入文本的空白/缩进以匹配当前行缩进。
+          insertTextRules:
+            languages.CompletionItemInsertTextRule.InsertAsSnippet,
+
+          // 要被替换的文本范围
+          range,
+        })),
+      };
+    },
+  });
+};
