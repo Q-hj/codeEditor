@@ -1,4 +1,7 @@
 <script setup lang="ts">
+defineOptions({
+  name: 'CodeEditor',
+});
 import CodeEditor from '@/components/codeEditor/codeEditor.vue';
 import { onMounted, ref } from 'vue';
 
