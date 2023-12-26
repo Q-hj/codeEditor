@@ -47,10 +47,10 @@ const handleChangeLanguage = () => {
   codeEditorRef.value?.setLanguage(language.value);
 };
 
-// 设置字体大小为 16px
-// editor.updateOptions({
-//   fontSize: 18,
-// });
+/** 切换字体大小 */
+const handleChangeFontSize = (fontSize: number) => {
+  codeEditorRef.value?.setFontSize(fontSize);
+};
 </script>
 
 <template>
@@ -87,15 +87,17 @@ const handleChangeLanguage = () => {
           <a-option>my-dark</a-option>
         </a-select>
       </p>
-      <!-- <p>
+      <p>
         字体大小：
         <a-input-number
-          :style="{ width: '320px' }"
-          :default-value="500"
+          :style="{ width: '160px' }"
+          :default-value="16"
+          :min="10"
+          :max="30"
           mode="button"
-          class="input-demo"
+          @change="(val) => handleChangeFontSize(val as number)"
         />
-      </p> -->
+      </p>
     </nav>
 
     <main class="flex-1">

@@ -97,9 +97,20 @@ const setLanguage = (language: string) => {
   editor.setModelLanguage(model, language);
 };
 
+/**
+ * 设置字体大小
+ * @param fontSize 字号
+ */
+const setFontSize = (fontSize: number) => {
+  editorInstance.updateOptions({
+    fontSize,
+  });
+};
+
 defineExpose({
   setTheme,
   setLanguage,
+  setFontSize,
 });
 </script>
 
