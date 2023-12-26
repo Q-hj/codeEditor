@@ -12,9 +12,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section>
+  <section class="h-100vh">
     <!-- <h1>codeEditor</h1> -->
-    <CodeEditor v-model="codeValue" language="IL" style="height: 700px" />
+    <CodeEditor v-model="codeValue" language="IL" style="height: 100%" />
   </section>
 </template>
 <style lang="less" scoped></style>

@@ -46,6 +46,11 @@ onMounted(() => {
   // console.log(editorInstance.getValue());
 });
 
+// 监听窗口的尺寸变化事件，然后重新布局
+window.addEventListener('resize', () => {
+  editorInstance.layout();
+});
+
 onBeforeUnmount(() => {
   // 销毁编辑器实例
   editorInstance.dispose();
