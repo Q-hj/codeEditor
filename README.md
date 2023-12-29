@@ -26,3 +26,28 @@
   - 代码格式化（待做）
   - 语法校验（待做）
   - 悬浮提示（待做）
+
+# LD编辑器
+
+层级：
+
+Network
+
+> 对应Konva.Layer
+
+- Instruction
+
+  > 对应Konva.Group
+
+  - InsBlock （功能块）
+
+    - InsParmas （参数列表）
+
+      - InsText （可编辑文本）
+
+    - 连接线
+
+  - InsCoil （线圈）
+    - 连接线
+  - InsContact （触点）
+    - 连接线
