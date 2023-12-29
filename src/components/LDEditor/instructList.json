@@ -40,13 +40,13 @@
       {
         "InsParamId": 4,
         "ParamName": "EN0",
-        "ParamType": 1,
+        "ParamType": 2,
         "InsId": 0
       },
       {
         "InsParamId": 5,
         "ParamName": "OUT",
-        "ParamType": 1,
+        "ParamType": 2,
         "InsId": 0
       }
     ],
@@ -83,13 +83,13 @@
       {
         "InsParamId": 9,
         "ParamName": "ENO",
-        "ParamType": 1,
+        "ParamType": 2,
         "InsId": 0
       },
       {
         "InsParamId": 10,
         "ParamName": "OUT",
-        "ParamType": 1,
+        "ParamType": 2,
         "InsId": 0
       }
     ],
