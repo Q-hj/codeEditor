@@ -40,7 +40,7 @@ onMounted(() => {
   const rectGap = 180;
 
   /** 参数间隔(垂直) */
-  const interval = 100;
+  const interval = 80;
 
   /** 参数距离顶部和底部的距离 */
   const verticalGap = interval / 2;
@@ -79,10 +79,10 @@ onMounted(() => {
         {
           x: startX,
           y: startY - 18,
+          width: rectWidth,
           align: 'center',
           text: instruct.InsName,
         },
-        Rect,
         input,
         (Text) => (currentText = Text),
       ),
@@ -113,10 +113,11 @@ onMounted(() => {
           {
             x: startX + rectWidth * (isLeft ? -1 : 1),
             y: startY + verticalGap + interval * sameParamsTypeCount,
+            width: rectWidth,
             align: isLeft ? 'right' : 'left',
             text: params.ParamName as string,
           },
-          Rect,
+
           input,
           (Text) => (currentText = Text),
         ),
@@ -134,7 +135,7 @@ onMounted(() => {
       id="input"
       type="text"
       hidden
-      class="absolute z100 px10 px5"
+      class="absolute z100 px5"
       @keyup.enter="updateText"
       @blur="updateText"
     />

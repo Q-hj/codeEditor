@@ -14,7 +14,6 @@ export class Text extends Konva.Text {
    */
   constructor(
     props: TextConfig,
-    rect: Konva.Rect,
     input: HTMLInputElement,
     fn: (text: Konva.Text) => void,
   ) {
@@ -23,7 +22,7 @@ export class Text extends Konva.Text {
       y: props.y,
 
       //   宽度默认为矩形的宽度
-      width: props.width || rect.attrs.width,
+      width: props.width,
 
       text: props.text,
       fontSize: props.fontSize || 16,
@@ -38,11 +37,13 @@ export class Text extends Konva.Text {
       document.body.style.cursor = 'default';
     });
     this.on('dblclick', () => {
-      const { x, y, width, align } = this.attrs;
+      const { x, y, width } = this.getClientRect();
+
+      const { align } = this.getAttrs();
       input.hidden = false;
       input.style.left = x + 'px';
       input.style.top = y - 8 + 'px';
-      input.style.width = width + 'px';
+      input.style.width = width - 10 - 3 + 'px';
       input.style.textAlign = align === 'right' ? 'center' : align;
       input.value = this.text() === '????' ? '' : this.text();
       input.focus();
