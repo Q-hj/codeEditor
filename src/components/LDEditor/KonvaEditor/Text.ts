@@ -2,6 +2,10 @@ import Konva from 'Konva';
 
 import type { TextConfig } from 'Konva/lib/shapes/Text';
 
+import useInput from '@/hooks/useInput';
+
+const { showInput } = useInput();
+
 /**
  * 可编辑文本
  */
@@ -9,14 +13,9 @@ export class Text extends Konva.Text {
   /**
    *
    * @param props Konva.Text的参数
-   * @param rect 附着的矩形
    * @param input 编辑输入框
    */
-  constructor(
-    props: TextConfig,
-    input: HTMLInputElement,
-    fn: (text: Konva.Text) => void,
-  ) {
+  constructor(props: TextConfig) {
     super({
       x: props.x,
       y: props.y,
@@ -30,26 +29,24 @@ export class Text extends Konva.Text {
       fontFamily: props.fontFamily,
       fill: props.fill || 'blue',
     });
+
+    // 鼠标移入
     this.on('mouseover', () => {
       document.body.style.cursor = 'pointer';
     });
+    // 鼠标移除
     this.on('mouseout', () => {
       document.body.style.cursor = 'default';
     });
+
+    // 双击
     this.on('dblclick', () => {
       const { x, y, width } = this.getClientRect();
 
       const { align } = this.getAttrs();
-      input.hidden = false;
-      input.style.left = x + 'px';
-      input.style.top = y - 8 + 'px';
-      input.style.width = width - 10 - 3 + 'px';
-      input.style.textAlign = align === 'right' ? 'center' : align;
-      input.value = this.text() === '????' ? '' : this.text();
-      input.focus();
-      if (fn) fn(this);
+
+      // 显示编辑框
+      showInput(this, x, y, width, align);
     });
   }
 }
-
-// todo 标题、 功能块参数输入 extends Text
