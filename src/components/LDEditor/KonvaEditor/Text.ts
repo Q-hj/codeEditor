@@ -40,12 +40,12 @@ export class Text extends Konva.Text {
 
     // 双击
     this.on('dblclick', () => {
-      const { x, y, width } = this.getClientRect();
+      const { x, y } = this.getClientRect();
 
       const { align } = this.getAttrs();
 
       // 显示编辑框
-      showInput(this, x, y, width, align);
+      showInput(this, x, y, align);
     });
   }
 }

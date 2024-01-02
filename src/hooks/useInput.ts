@@ -16,7 +16,6 @@ function useInput() {
     konvaText: Konva.Text,
     x: number,
     y: number,
-    width: number,
     align: 'left' | 'center' | 'right',
   ) => {
     const input = document.querySelector('#paramsInput') as HTMLInputElement;
@@ -28,7 +27,7 @@ function useInput() {
     input.hidden = false;
     input.style.left = x + 'px';
     input.style.top = y - 8 + 'px';
-    input.style.width = width - 10 - 3 + 'px';
+    // input.style.width = width - 10 - 3 + 'px';
     input.style.textAlign = align === 'right' ? 'center' : align;
     input.value = value === '????' ? '' : value;
     input.focus();
@@ -51,7 +50,7 @@ function useInput() {
 
     const { currentKonvaText } = useLDStore();
 
-    currentKonvaText?.text(value);
+    currentKonvaText?.text(value || '????');
   };
 
   return { showInput, handleInputChange };

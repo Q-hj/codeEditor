@@ -4,6 +4,7 @@ import { InsParam, Instruction } from '../type';
 
 import { Text } from './Text';
 
+/** 指令参数的绘制参数 */
 interface Props {
   startX: number;
   startY: number;
@@ -34,8 +35,10 @@ export class InsBlock extends Konva.Group {
     /** 参数距离顶部和底部的距离 */
     const verticalGap = interval / 2;
 
-    // 功能块起始坐标
+    /** 功能块起始坐标-X */
     const startX = 100 + insIndex * (rectWidth + rectGap);
+
+    /** 功能块起始坐标-Y */
     const startY = 100;
 
     const rectHeight = (interval / 2) * instruct.ParamsNumber + verticalGap;
@@ -86,7 +89,7 @@ export class InsBlock extends Konva.Group {
     // 同一类型参数的下标
     let sameParamsTypeCount = 0;
 
-    // 绘制参数
+    // * 绘制参数
     for (let paramsIndex = 0; paramsIndex < instruct.length; paramsIndex++) {
       const params = instruct[paramsIndex];
 
@@ -96,16 +99,58 @@ export class InsBlock extends Konva.Group {
       lastParamsType = params.ParamType;
 
       const isLeft = params.ParamType === 1;
+
+      /** 文字大小 */
+      const fontSize = 16;
+
+      /** 文字宽度 */
+      const textWidth = 50;
+
+      const x = props.startX + props.rectWidth * (isLeft ? 0 : 1);
+
+      /** 文本坐标X */
+      const textX = x + (isLeft ? 10 : -10 - textWidth);
+
+      const y =
+        props.startY + props.verticalGap + props.interval * sameParamsTypeCount;
+
+      // # 绘制参数名
+      this.add(
+        new Konva.Text({
+          x: textX,
+          y,
+          width: textWidth,
+          align: isLeft ? 'left' : 'right',
+          text: params.ParamName as string,
+          fontSize: 16,
+        }),
+      );
+
+      // # 绘制参数指示线
+
+      const lineWidth = 10;
+      const lineX = x + (isLeft ? -lineWidth : 0);
+      const lineY = y + fontSize / 2 - 2;
+
+      this.add(
+        new Konva.Line({
+          points: [lineX, lineY, lineX + lineWidth, lineY],
+          stroke: 'black',
+          strokeWidth: 4,
+        }),
+      );
+
+      // # 绘制可编辑参数
+
+      const valueWidth = 100;
+      const valueX = x + (isLeft ? -(valueWidth + lineWidth) : lineWidth);
       this.add(
         new Text({
-          x: props.startX + props.rectWidth * (isLeft ? -1 : 1),
-          y:
-            props.startY +
-            props.verticalGap +
-            props.interval * sameParamsTypeCount,
-          width: props.rectWidth,
+          x: valueX,
+          y,
+          width: valueWidth,
           align: isLeft ? 'right' : 'left',
-          text: params.ParamName as string,
+          text: '????',
         }),
       );
     }

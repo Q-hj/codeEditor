@@ -45,7 +45,7 @@ onMounted(() => {
       id="paramsInput"
       type="text"
       hidden
-      class="absolute z100 px5"
+      class="absolute z100 px5 w100"
       @blur="handleInputChange"
     />
     <div id="container" wfull></div>
