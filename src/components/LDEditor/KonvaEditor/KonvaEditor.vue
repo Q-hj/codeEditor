@@ -30,6 +30,12 @@ onMounted(() => {
   });
 
   stage.add(new InsNetwork(instructList));
+
+  // 遍历网络列表
+  // for (let insIndex = 0; insIndex < instructList.length; insIndex++) {
+  //   const instruct = instructList[insIndex];
+  //   this.add(new InsBlock(instruct));
+  // }
 });
 </script>
 
@@ -40,7 +46,7 @@ onMounted(() => {
       type="text"
       hidden
       class="absolute z100 px5"
-      @change="handleInputChange"
+      @blur="handleInputChange"
     />
     <div id="container" wfull></div>
   </section>

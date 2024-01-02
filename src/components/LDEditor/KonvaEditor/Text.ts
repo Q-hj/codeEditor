@@ -20,7 +20,6 @@ export class Text extends Konva.Text {
       x: props.x,
       y: props.y,
 
-      //   宽度默认为矩形的宽度
       width: props.width,
 
       text: props.text,
