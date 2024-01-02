@@ -26,7 +26,7 @@ function useInput() {
 
     input.hidden = false;
     input.style.left = x + 'px';
-    input.style.top = y - 8 + 'px';
+    input.style.top = y - 4 + 'px';
     // input.style.width = width - 10 - 3 + 'px';
     input.style.textAlign = align === 'right' ? 'center' : align;
     input.value = value === '????' ? '' : value;

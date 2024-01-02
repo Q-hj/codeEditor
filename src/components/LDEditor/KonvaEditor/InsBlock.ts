@@ -17,14 +17,11 @@ interface Props {
 export class InsBlock extends Konva.Group {
   constructor(instruct: Instruction, insIndex: number) {
     super({
+      id: `InsBlock-${insIndex}`,
+      name: 'InsBlock',
       draggable: true,
     });
     this.drawInsBlock(instruct, insIndex);
-
-    // 点击选中
-    this.on('click', () => {
-      // document.body.style.cursor = 'pointer';
-    });
   }
 
   drawInsBlock(instruct: Instruction, insIndex: number) {
@@ -175,7 +172,4 @@ export class InsBlock extends Konva.Group {
       );
     }
   }
-
-  /** 绘制边框 */
-  drawBorder() {}
 }

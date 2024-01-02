@@ -13,6 +13,11 @@ const { handleInputChange } = useInput();
 
 console.log(instructList);
 
+const mockDate = [];
+for (let index = 0; index < 10000; index++) {
+  mockDate.push(instructList[1]);
+}
+
 let stage: Konva.Stage;
 
 onMounted(() => {
