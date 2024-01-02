@@ -20,6 +20,11 @@ export class InsBlock extends Konva.Group {
       draggable: true,
     });
     this.drawInsBlock(instruct, insIndex);
+
+    // 点击选中
+    this.on('click', () => {
+      // document.body.style.cursor = 'pointer';
+    });
   }
 
   drawInsBlock(instruct: Instruction, insIndex: number) {
@@ -43,7 +48,7 @@ export class InsBlock extends Konva.Group {
 
     const rectHeight = (interval / 2) * instruct.ParamsNumber + verticalGap;
 
-    // 绘制矩形
+    // # 绘制矩形
     const Rect = new Konva.Rect({
       x: startX,
       y: startY,
@@ -52,9 +57,18 @@ export class InsBlock extends Konva.Group {
       stroke: 'black',
       strokeWidth: 1,
     });
+
+    // 鼠标移入
+    Rect.on('mouseover', () => {
+      document.body.style.cursor = 'move';
+    });
+    // 鼠标移除
+    Rect.on('mouseout', () => {
+      document.body.style.cursor = 'default';
+    });
     this.add(Rect);
 
-    // 绘制标题
+    // # 绘制标题
     this.add(
       new Konva.Text({
         x: startX,
@@ -67,7 +81,7 @@ export class InsBlock extends Konva.Group {
       }),
     );
 
-    // 绘制参数
+    // # 绘制参数
     this.drawInsParams(instruct.Params, {
       startX,
       startY,
@@ -106,13 +120,15 @@ export class InsBlock extends Konva.Group {
       /** 文字宽度 */
       const textWidth = 50;
 
+      /** 基准坐标 X */
       const x = props.startX + props.rectWidth * (isLeft ? 0 : 1);
+
+      /** 基准坐标 Y */
+      const y =
+        props.startY + props.verticalGap + props.interval * sameParamsTypeCount;
 
       /** 文本坐标X */
       const textX = x + (isLeft ? 10 : -10 - textWidth);
-
-      const y =
-        props.startY + props.verticalGap + props.interval * sameParamsTypeCount;
 
       // # 绘制参数名
       this.add(
@@ -143,7 +159,9 @@ export class InsBlock extends Konva.Group {
       // # 绘制可编辑参数
 
       const valueWidth = 100;
+
       const valueX = x + (isLeft ? -(valueWidth + lineWidth) : lineWidth);
+
       this.add(
         new Text({
           x: valueX,
@@ -151,8 +169,13 @@ export class InsBlock extends Konva.Group {
           width: valueWidth,
           align: isLeft ? 'right' : 'left',
           text: '????',
+          fill: 'blue',
+          fontSize: 16,
         }),
       );
     }
   }
+
+  /** 绘制边框 */
+  drawBorder() {}
 }

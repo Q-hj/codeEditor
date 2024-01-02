@@ -1,8 +1,9 @@
 <script setup lang="ts" name="KonvaEditor">
-import Konva from 'Konva';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
-import { InsNetwork } from './InsNetwork';
+import Konva from 'Konva';
+
+import { Procedure } from './Procedure';
 
 import useInput from '@/hooks/useInput';
 
@@ -12,30 +13,30 @@ const { handleInputChange } = useInput();
 
 console.log(instructList);
 
+let stage: Konva.Stage;
+
 onMounted(() => {
-  var screenWidth =
+  const screenWidth =
     window.innerWidth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth;
-  var screenHeight =
+  const screenHeight =
     window.innerHeight ||
     document.documentElement.clientHeight ||
     document.body.clientHeight;
 
-  // first we need to create a stage
-  const stage = new Konva.Stage({
-    container: 'container',
-    width: screenWidth,
-    height: screenHeight,
-  });
+  stage = new Procedure(
+    {
+      container: 'container',
+      width: screenWidth,
+      height: screenHeight,
+    },
+    instructList,
+  );
+});
 
-  stage.add(new InsNetwork(instructList));
-
-  // 遍历网络列表
-  // for (let insIndex = 0; insIndex < instructList.length; insIndex++) {
-  //   const instruct = instructList[insIndex];
-  //   this.add(new InsBlock(instruct));
-  // }
+onUnmounted(() => {
+  stage.destroy();
 });
 </script>
 

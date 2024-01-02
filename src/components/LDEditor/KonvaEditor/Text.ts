@@ -16,18 +16,7 @@ export class Text extends Konva.Text {
    * @param input 编辑输入框
    */
   constructor(props: TextConfig) {
-    super({
-      x: props.x,
-      y: props.y,
-
-      width: props.width,
-
-      text: props.text,
-      fontSize: props.fontSize || 16,
-      align: props.align,
-      fontFamily: props.fontFamily,
-      fill: props.fill || 'blue',
-    });
+    super(props);
 
     // 鼠标移入
     this.on('mouseover', () => {
