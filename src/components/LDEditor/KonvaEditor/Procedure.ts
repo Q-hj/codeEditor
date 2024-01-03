@@ -20,18 +20,19 @@ export class Procedure extends Konva.Stage {
     super(props);
 
     // # 绘制矩形选中边框
-    const padding = 60;
+    const paddingX = 80;
+    const paddingY = 10;
 
     // 创建虚线边框
     const dashLine = new Konva.Line({
       x: 0,
       y: 0,
       points: [0, 0, 50, 0, 50, 50, 0, 50], // 指定边框的点坐标
-      stroke: 'black',
+      stroke: '#007acc',
       strokeWidth: 2,
       closed: true,
       visible: false,
-      dash: [2, 4], // 指定线段和间隙的长度
+      dash: [2, 2], // 指定线段和间隙的长度
     });
 
     // # 绘制网络
@@ -50,9 +51,6 @@ export class Procedure extends Konva.Stage {
       // 将选中框图形移动至当前指令块
       dashLine.moveTo(target.parent);
 
-      // 将选中框图形移动到组的底部
-      dashLine.moveToBottom();
-
       // 获取矩形
       const rect = target.parent.findOne('Rect');
 
@@ -63,21 +61,26 @@ export class Procedure extends Konva.Stage {
       dashLine.visible(true);
 
       dashLine.points([
-        x - padding,
-        y - padding,
-        x + width + padding,
-        y - padding,
-        x + width + padding,
-        y + height + padding,
-        x - padding,
-        y + height + padding,
-        x - padding,
-        y - padding,
+        x - paddingX,
+        y - paddingY,
+        x + width + paddingX,
+        y - paddingY,
+        x + width + paddingX,
+        y + height + paddingY,
+        x - paddingX,
+        y + height + paddingY,
+        x - paddingX,
+        y - paddingY,
       ]);
+
+      // 将选中框图形移动到组的底部
+      dashLine.moveToBottom();
     });
   }
   drawProcedure(instructList: Instruction[]) {
-    this.add(new InsNetwork(instructList));
+    for (let index = 0; index < 1; index++) {
+      this.add(new InsNetwork(instructList));
+    }
 
     // todo 遍历网络列表
   }

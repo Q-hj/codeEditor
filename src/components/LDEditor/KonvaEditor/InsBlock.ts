@@ -69,12 +69,12 @@ export class InsBlock extends Konva.Group {
     this.add(
       new Konva.Text({
         x: startX,
-        y: startY - 18,
+        y: startY + 6,
         width: rectWidth,
         align: 'center',
         text: instruct.InsName as string,
         fontSize: 16,
-        fill: 'blue',
+        // fill: 'blue',
       }),
     );
 
