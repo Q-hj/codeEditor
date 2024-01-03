@@ -23,7 +23,7 @@ const data: LDNetwork[] = [
 </script>
 
 <template>
-  <section>
+  <section h-full>
     <KonvaEditor />
   </section>
 </template>

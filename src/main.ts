@@ -16,4 +16,4 @@ app.use(createPinia());
 app.use(router);
 app.use(ArcoVue);
 app.mount('#app');
-document.body.setAttribute('arco-theme', 'dark');
+// document.body.setAttribute('arco-theme', 'dark');
