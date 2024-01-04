@@ -1,7 +1,8 @@
-import type { HostObjectAsyncProxy } from '@/types/webview2'
+import type { HostObjectAsyncProxy } from '@/types/webview2';
 
-interface InstructionController extends HostObjectAsyncProxy{
-  GetLDInstructions():Promise<string>
+interface InstructionController extends HostObjectAsyncProxy {
+  GetLDInstructions(): Promise<string>;
 }
 
-export const instructionController =  window.chrome.webview.hostObjects.instructionController as InstructionController;
+export const instructionController = window.chrome.webview.hostObjects
+  .instructionController as InstructionController;

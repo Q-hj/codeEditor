@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 
+import { instructionController } from '@/controllers/instructionController';
+
 const menu = [
   '文件',
   '编辑',
@@ -46,21 +48,30 @@ const treeData = [
     ],
   },
 ];
+
+function getData() {
+  console.time();
+  instructionController.GetLDInstructions().then((e) => {
+    e = JSON.parse(e);
+    console.timeEnd();
+  });
+}
 </script>
 
 <template>
   <a-layout h-full>
-    <a-layout-header>
+    <a-layout-header class="bg-gray-2/75">
       <span v-for="item in menu" :key="item" class="ml8 leading-38">{{
         item
       }}</span>
     </a-layout-header>
     <a-layout>
       <a-layout-sider :resize-directions="['right']">
-        <header class="bg-gray-3 pl10 py6">工程管理器</header>
+        <header class="bg-gray-3 pl10 py6" @click="getData">工程管理器</header>
         <main>
           <a-tree
             :data="treeData"
+            show-line
             :default-expanded-keys="['0-0-0']"
             :default-selected-keys="['0-0-0', '0-0-1']"
           />
