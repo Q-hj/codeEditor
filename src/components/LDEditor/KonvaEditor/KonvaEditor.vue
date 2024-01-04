@@ -11,7 +11,7 @@ import useInput from '@/hooks/useInput';
 
 import instructList from '../instructList.json';
 
-import { Instruction } from '../type';
+import { Instruction } from '@/types/Instruction';
 
 const { handleInputChange } = useInput();
 
@@ -51,7 +51,7 @@ onMounted(() => {
   // 创建ResizeObserver实例
   const resizeObserver = new ResizeObserver((entries) => {
     const { width, height } = entries[0].contentRect;
-    // handleContainerResize(width, height);
+    handleContainerResize(width, height);
   });
 
   // 开始监听容器的尺寸变化

@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
 
-import { instructionController } from '@/controllers/instructionController';
+import { useAppStore } from '@/store/app';
+
+const { instructions } = useAppStore();
+
+console.log(instructions);
 
 const menu = [
   '文件',
@@ -49,13 +53,15 @@ const treeData = [
   },
 ];
 
-function getData() {
-  console.time();
-  instructionController.GetLDInstructions().then((e) => {
-    e = JSON.parse(e);
-    console.timeEnd();
-  });
-}
+// 获取指令列表
+// function getData() {
+//   console.time();
+//   instructionController.GetLDInstructions().then((e) => {
+//     e = JSON.parse(e);
+//     console.log(e);
+//     console.timeEnd();
+//   });
+// }
 </script>
 
 <template>
