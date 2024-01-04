@@ -1,3 +1,4 @@
+/** 解析指令参数类型 */
 export class InsParamType {
   constructor(paramType: number) {
     if (paramType == 0) this.notype = true;

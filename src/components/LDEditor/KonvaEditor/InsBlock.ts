@@ -1,6 +1,6 @@
 import Konva from 'Konva';
 
-import { InsParam, Instruction } from '../type';
+import { InsParam, Instruction } from '@/types/Instruction';
 
 import { Text } from './Text';
 
@@ -15,16 +15,16 @@ interface Props {
 
 /** 指令-功能块 */
 export class InsBlock extends Konva.Group {
-  constructor(instruct: Instruction, insIndex: number) {
+  constructor(instruct: Instruction, insIndex: number, networkIndex: number) {
     super({
       id: `InsBlock-${insIndex}`,
       name: 'InsBlock',
       draggable: true,
     });
-    this.drawInsBlock(instruct, insIndex);
+    this.drawInsBlock(instruct, insIndex, networkIndex);
   }
 
-  drawInsBlock(instruct: Instruction, insIndex: number) {
+  drawInsBlock(instruct: Instruction, insIndex: number, networkIndex: number) {
     /** 矩形宽度 */
     const rectWidth = 180;
 
@@ -41,9 +41,9 @@ export class InsBlock extends Konva.Group {
     const startX = 100 + insIndex * (rectWidth + rectGap);
 
     /** 功能块起始坐标-Y */
-    const startY = 100;
+    const startY = 50; //+ networkIndex * 400
 
-    const rectHeight = (interval / 2) * instruct.ParamsNumber + verticalGap;
+    const rectHeight = verticalGap * instruct.ParamsNumber + verticalGap * 2;
 
     // # 绘制矩形
     const Rect = new Konva.Rect({

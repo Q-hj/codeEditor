@@ -11,10 +11,15 @@ import useInput from '@/hooks/useInput';
 
 import instructList from '../instructList.json';
 
+import { useAppStore } from '@/store/app';
+
 import { Instruction } from '@/types/Instruction';
 
 const { handleInputChange } = useInput();
 
+const { ldData } = useAppStore();
+
+console.log(ldData);
 // console.log(instructList);
 
 const mockDate: Instruction[] = [];
@@ -40,7 +45,7 @@ onMounted(() => {
       width,
       height,
     },
-    mockDate,
+    ldData || mockDate,
   );
 
   const handleContainerResize = debounce((width, height) => {

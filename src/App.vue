@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/app';
 
 const { instructions } = useAppStore();
 
-console.log(instructions);
+// console.log(instructions);
 
 const menu = [
   '文件',
@@ -90,7 +90,7 @@ const treeData = [
     <a-resize-box
       :directions="['top']"
       :style="{
-        height: '300px',
+        height: '30px',
         minHeight: '30px',
         maxHeight: '300px',
       }"
