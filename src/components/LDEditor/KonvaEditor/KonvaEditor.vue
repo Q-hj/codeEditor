@@ -9,25 +9,19 @@ import { Procedure } from './Procedure';
 
 import useInput from '@/hooks/useInput';
 
-import instructList from '../instructList.json';
-
 import { useAppStore } from '@/store/app';
 
-import { Instruction } from '@/types/Instruction';
+import { networkConfig } from './Procedure';
 
 const { handleInputChange } = useInput();
 
 const { ldData } = useAppStore();
 
 console.log(ldData);
-// console.log(instructList);
 
-const mockDate: Instruction[] = [];
+const allWidth = ldData[0].content.length * networkConfig.blockWidth;
 
-for (let index = 0; index < 100; index++) {
-  mockDate.push(instructList[1]);
-  mockDate.push(instructList[2]);
-}
+const allHeight = ldData.length * networkConfig.height();
 
 let stage: Konva.Stage;
 
@@ -45,7 +39,7 @@ onMounted(() => {
       width,
       height,
     },
-    ldData || mockDate,
+    ldData,
   );
 
   const handleContainerResize = debounce((width, height) => {
@@ -61,6 +55,21 @@ onMounted(() => {
 
   // 开始监听容器的尺寸变化
   resizeObserver.observe(sectionRef.value!);
+
+  var scrollContainer = sectionRef.value!;
+
+  const repositionStage = () => {
+    var dx = scrollContainer.scrollLeft;
+    var dy = scrollContainer.scrollTop;
+
+    stage.container().style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+
+    stage.x(-dx);
+    stage.y(-dy);
+    stage.batchDraw();
+  };
+  scrollContainer.addEventListener('scroll', repositionStage);
+  repositionStage();
 });
 
 onUnmounted(() => {
@@ -69,7 +78,9 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <section ref="sectionRef" class="h-full relative">
+  <!-- 外层容器（可滚动） -->
+  <section ref="sectionRef" class="scroll-container">
+    <!-- 参数输入框 -->
     <input
       id="paramsInput"
       type="text"
@@ -78,6 +89,26 @@ onUnmounted(() => {
       @blur="handleInputChange"
       @keyup.enter="handleInputChange"
     />
-    <div id="container" wfull></div>
+
+    <!-- 用于模拟画布完整大小 -->
+    <div
+      class="overflow-hidden"
+      :style="{
+        width: `${allWidth}px`,
+        height: `${allHeight}px`,
+      }"
+    >
+      <!-- 画布容器 -->
+      <div id="container" class="overflow-hidden"></div>
+    </div>
   </section>
 </template>
+
+<style scoped>
+.scroll-container {
+  width: 100%;
+  height: calc(100vh - 60px);
+  overflow: auto;
+  position: relative;
+}
+</style>

@@ -27,6 +27,8 @@ export const networkConfig = {
   height: function () {
     return this.contentHeight + this.commentHeight;
   },
+  /** 块宽度 */
+  blockWidth: 180,
 };
 
 /** 指令参数的绘制参数 */
@@ -51,7 +53,7 @@ export class Procedure extends Konva.Stage {
     this.drawProcedure(ldData);
 
     // # 绘制垂直滚动条
-    drawVerticalBar(this, ldData.length);
+    // drawVerticalBar(this, ldData.length);
   }
   drawProcedure(ldData: LdData[]) {
     // * 遍历网络列表

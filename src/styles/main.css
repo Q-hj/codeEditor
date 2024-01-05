@@ -1,6 +1,7 @@
 @import url('@unocss/reset/normalize.css');
 @import url('./arco.css');
 
+/* 
 ::-webkit-scrollbar-track {
   background: rgb(0 0 0 / 10%);
   border-radius: 0;
@@ -8,8 +9,8 @@
 
 ::-webkit-scrollbar {
   appearance: none;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -17,7 +18,7 @@
   border-radius: 5px;
   background: rgb(0 0 0 / 15%);
   transition: color 0.2s ease;
-}
+} */
 
 body {
   margin: 0;
