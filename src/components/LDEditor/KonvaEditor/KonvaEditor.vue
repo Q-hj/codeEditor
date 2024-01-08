@@ -1,8 +1,6 @@
 <script setup lang="ts" name="KonvaEditor">
 import { onMounted, onUnmounted, ref } from 'vue';
 
-import Konva from 'Konva';
-
 import { debounce } from 'lodash-es';
 
 import { Procedure } from './Procedure';
@@ -11,7 +9,7 @@ import useInput from '@/hooks/useInput';
 
 import { useAppStore } from '@/store/app';
 
-import { networkConfig } from './Procedure';
+import { blockConfig, drawConfig, networkConfig } from './config';
 
 const { handleInputChange } = useInput();
 
@@ -19,19 +17,24 @@ const { ldData } = useAppStore();
 
 console.log(ldData);
 
-const allWidth = ldData[0].content.length * networkConfig.blockWidth;
+const allWidth = ldData[0].content.length * blockConfig.width();
 
 const allHeight = ldData.length * networkConfig.height();
 
-let stage: Konva.Stage;
+let stage: Procedure;
 
 const sectionRef = ref<HTMLElement>();
 
 onMounted(() => {
-  const width = sectionRef.value!.clientWidth;
-  const height = sectionRef.value!.clientHeight;
+  const scrollContainer = sectionRef.value!;
+
+  const width = scrollContainer.clientWidth;
+  const height = scrollContainer.clientHeight;
   // console.log(width);
   // console.log(height);
+
+  /** 修改全局配置 */
+  Object.assign(drawConfig, { width, height });
 
   stage = new Procedure(
     {
@@ -42,10 +45,18 @@ onMounted(() => {
     ldData,
   );
 
+  // # 监听容器的尺寸变化来重新绘制内容
+  let flag = true;
   const handleContainerResize = debounce((width, height) => {
+    /** 修改全局配置 */
+    Object.assign(drawConfig, { width, height });
+    if (flag) return (flag = false);
+
+    /** 更新stage尺寸 */
     stage.setAttrs({ width, height });
-    stage.draw();
-  }, 10);
+
+    stage.redraw(stage);
+  }, 50);
 
   // 创建ResizeObserver实例
   const resizeObserver = new ResizeObserver((entries) => {
@@ -53,23 +64,26 @@ onMounted(() => {
     handleContainerResize(width, height);
   });
 
-  // 开始监听容器的尺寸变化
-  resizeObserver.observe(sectionRef.value!);
+  // 开始监听
+  resizeObserver.observe(scrollContainer);
 
-  var scrollContainer = sectionRef.value!;
+  // # 监听容器的滚动条高度来重新绘制内容
+  const repositionStage = debounce(() => {
+    const x = scrollContainer.scrollLeft;
+    const y = scrollContainer.scrollTop;
 
-  const repositionStage = () => {
-    var dx = scrollContainer.scrollLeft;
-    var dy = scrollContainer.scrollTop;
+    // 让stage始终处于可见区域
+    stage.container().style.transform = 'translate(' + x + 'px, ' + y + 'px)';
 
-    stage.container().style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+    /** 更新stage坐标 */
+    stage.setAttrs({ x: -x, y: -y });
 
-    stage.x(-dx);
-    stage.y(-dy);
-    stage.batchDraw();
-  };
+    stage.redraw(stage);
+  }, 50);
+
   scrollContainer.addEventListener('scroll', repositionStage);
-  repositionStage();
+
+  // repositionStage();
 });
 
 onUnmounted(() => {

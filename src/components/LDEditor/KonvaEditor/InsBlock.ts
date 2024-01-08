@@ -2,7 +2,11 @@ import Konva from 'Konva';
 
 import { InsParam, Instruction } from '@/types/Instruction';
 
+import { blockConfig } from './config';
+
 import { Text } from './Text';
+
+console.log(blockConfig);
 
 /** 指令参数的绘制参数 */
 interface Props {
@@ -31,17 +35,20 @@ export class InsBlock extends Konva.Group {
     /** 矩形间隔(水平) */
     const rectGap = 180;
 
+    /** 功能块起始坐标-X */
+    // const startX = insIndex * (rectWidth + rectGap);
+
+    const startX = blockConfig.startX(insIndex);
+
     /** 参数间隔(垂直) */
     const interval = 80;
 
     /** 参数距离顶部和底部的距离 */
     const verticalGap = interval / 2;
 
-    /** 功能块起始坐标-X */
-    const startX = 100 + insIndex * (rectWidth + rectGap);
-
     /** 功能块起始坐标-Y */
-    const startY = 50; //+ networkIndex * 400
+    // const startY = 50; //+ networkIndex * 400
+    const startY = blockConfig.startY(networkIndex);
 
     const rectHeight = verticalGap * instruct.ParamsNumber + verticalGap * 2;
 
@@ -70,7 +77,7 @@ export class InsBlock extends Konva.Group {
       new Konva.Text({
         x: startX,
         y: startY + 6,
-        width: rectWidth,
+        width: blockConfig.rectWidth,
         align: 'center',
         text: instruct.InsName as string,
         fontSize: 16,

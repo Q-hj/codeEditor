@@ -1,35 +1,16 @@
 import Konva from 'Konva';
 
-import { InsNetwork } from './InsNetwork';
-
 import { LdData } from '@/types/ldData';
 
-/** 画布基本配置 */
-export const drawConfig = {
-  /** 单元格宽度 */
-  rowWidth: 40,
-  /** 单元格高度 */
-  rowHeight: 20,
+import { InsNetwork } from './InsNetwork';
 
-  /** 最大行数 */
-  maxRow: 800,
-  /** 最大列数 */
-  maxCol: 40,
-};
+import { networkConfig } from './config';
 
-/** network绘制配置 */
-export const networkConfig = {
-  /** 注释高度 */
-  commentHeight: 40,
-  /** 内容高度 */
-  contentHeight: drawConfig.rowHeight * 10,
-  /** 总高度 */
-  height: function () {
-    return this.contentHeight + this.commentHeight;
-  },
-  /** 块宽度 */
-  blockWidth: 180,
-};
+interface IProcedure {
+  stage: Konva.Stage | null;
+  /** 梯形图数据 */
+  ldData: LdData[];
+}
 
 /** 指令参数的绘制参数 */
 interface ProcedureProps {
@@ -42,9 +23,15 @@ interface ProcedureProps {
 }
 
 /** 梯形图程序 */
-export class Procedure extends Konva.Stage {
+export class Procedure extends Konva.Stage implements IProcedure {
+  ldData: LdData[];
+  stage: Konva.Stage | null;
+
   constructor(props: ProcedureProps, ldData: LdData[]) {
     super(props);
+
+    this.stage = null;
+    this.ldData = ldData;
 
     // # 绘制矩形选中边框
     this.creatDashedBorder();
@@ -55,13 +42,29 @@ export class Procedure extends Konva.Stage {
     // # 绘制垂直滚动条
     // drawVerticalBar(this, ldData.length);
   }
+
+  /** 绘制梯形图内容 */
   drawProcedure(ldData: LdData[]) {
     // * 遍历网络列表
     for (let index = 0; index < ldData.length; index++) {
       const network = ldData[index];
 
-      this.add(new InsNetwork(network, index));
+      this.add(new InsNetwork(network, index, this.stage));
     }
+  }
+
+  /** 重新绘制内容 */
+  redraw(stage: Konva.Stage | null) {
+    this.stage = stage;
+
+    for (let index = 0; index < this.children.length; index++) {
+      const insNetwork = this.children[index] as InsNetwork;
+      insNetwork.destroy();
+      // insNetwork.redraw();
+    }
+    this.drawProcedure(this.ldData);
+
+    // stage.batchDraw();
   }
 
   /** 创建选中边框 并绑定事件 */
