@@ -73,16 +73,23 @@ export class InsNetwork extends Konva.Layer implements INetwork {
 
     const { x, y } = state?.getClientRect() || {};
 
-    // console.log(x, y);
-    console.log([...Array.from(state?.children || [])]);
-    console.log(state?.getClientRect());
+    // console.log(x);
 
-    const minX = x || 0;
-    const minY = y || 0;
-    const maxX = minX + defaultWidth;
-    const maxY = minY + defaultHeight;
+    //-1: x最小值为-0.5 ？
+
+    // 缓冲值
+    const bufferValue = 100;
+
+    const minX = x ? -x - bufferValue : 0;
+    const minY = y ? -y - bufferValue : 0;
+    const maxX = minX + defaultWidth + bufferValue;
+    const maxY = minY + defaultHeight + bufferValue;
+
+    // console.log(minX);
+    // console.log(maxX);
 
     if (insIndex) {
+      // console.log(insY);
       // console.log(insX >= minX && insX <= maxX);
     }
     /** 是否在水平坐标内 */

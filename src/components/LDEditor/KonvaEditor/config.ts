@@ -48,6 +48,14 @@ export const blockConfig = {
   /** 矩形宽度 */
   rectWidth: 180,
 
+  /**
+   * 矩形高度
+   * @param paramsNum 参数数量
+   */
+  rectHeight: function (paramsNum: number) {
+    return this.verticalGap() * paramsNum + this.verticalGap() * 2;
+  },
+
   /** 矩形水平内边距 */
   paddingX: 90,
 
@@ -63,12 +71,9 @@ export const blockConfig = {
     return insIndex * this.width();
   },
 
-  /** 参数间隔(垂直) */
-  interval: 80,
-
   /** 参数距离顶部和底部的距离 */
   verticalGap: function () {
-    return this.interval / 2;
+    return paramsConfig.interval / 2;
   },
 
   /**
@@ -78,4 +83,15 @@ export const blockConfig = {
   startY: function (networkIndex?: number) {
     return 50; //+ networkIndex * 400
   },
+};
+
+/** 功能块参数绘制配置 */
+export const paramsConfig = {
+  /** 参数间隔(垂直) */
+  interval: 80,
+
+  /** 参数文本宽度 */
+  width: 100,
+
+  startX: function () {},
 };

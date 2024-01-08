@@ -87,7 +87,7 @@ for (let index = 0; index < 10; index++) {
 }
 
 export const useAppStore = defineStore({
-  id: 'LD',
+  id: 'app',
   state: (): AppState => ({
     instructions,
     ldData,

@@ -6,7 +6,7 @@ interface State {
   // isInsSelected: boolean;
 }
 
-const useLDStore = defineStore({
+export const useLDStore = defineStore({
   id: 'LD',
   state: (): State => ({
     /** 选中的参数文本 */

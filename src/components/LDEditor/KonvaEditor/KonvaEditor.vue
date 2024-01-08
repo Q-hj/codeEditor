@@ -121,7 +121,7 @@ onUnmounted(() => {
 <style scoped>
 .scroll-container {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 80px);
   overflow: auto;
   position: relative;
 }

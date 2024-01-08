@@ -27,9 +27,15 @@ export class Text extends Konva.Text {
       document.body.style.cursor = 'default';
     });
 
+    this.on('click', () => {
+      console.log(this.getClientRect());
+    });
+
     // 双击
     this.on('dblclick', () => {
       const { x, y } = this.getClientRect();
+
+      console.log(this.getClientRect());
 
       const { align } = this.getAttrs();
 

@@ -29,35 +29,30 @@ export class InsBlock extends Konva.Group {
   }
 
   drawInsBlock(instruct: Instruction, insIndex: number, networkIndex: number) {
-    /** 矩形宽度 */
-    const rectWidth = 180;
-
-    /** 矩形间隔(水平) */
-    const rectGap = 180;
-
     /** 功能块起始坐标-X */
-    // const startX = insIndex * (rectWidth + rectGap);
-
     const startX = blockConfig.startX(insIndex);
+    // const startX = insIndex * (rectWidth + rectGap);
 
     /** 参数间隔(垂直) */
     const interval = 80;
 
     /** 参数距离顶部和底部的距离 */
-    const verticalGap = interval / 2;
+    const verticalGap = blockConfig.verticalGap();
 
     /** 功能块起始坐标-Y */
-    // const startY = 50; //+ networkIndex * 400
     const startY = blockConfig.startY(networkIndex);
+    // const startY = 50; //+ networkIndex * 400
 
     const rectHeight = verticalGap * instruct.ParamsNumber + verticalGap * 2;
+
+    const rectWidth = blockConfig.rectWidth;
 
     // # 绘制矩形
     const Rect = new Konva.Rect({
       x: startX,
       y: startY,
-      width: rectWidth,
-      height: rectHeight,
+      width: blockConfig.rectWidth,
+      height: blockConfig.rectHeight(instruct.ParamsNumber),
       stroke: 'black',
       strokeWidth: 1,
     });

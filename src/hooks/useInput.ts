@@ -2,6 +2,8 @@ import Konva from 'Konva';
 
 import useLDStore from '@/store/LD';
 
+const { setKonvaText } = useLDStore();
+
 /** 全局输入框 */
 function useInput() {
   /**
@@ -31,8 +33,6 @@ function useInput() {
     input.style.textAlign = align === 'right' ? 'center' : align;
     input.value = value === '????' ? '' : value;
     input.focus();
-
-    const { setKonvaText } = useLDStore();
 
     setKonvaText(konvaText);
   };

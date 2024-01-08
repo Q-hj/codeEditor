@@ -59,7 +59,9 @@ export class Procedure extends Konva.Stage implements IProcedure {
 
     for (let index = 0; index < this.children.length; index++) {
       const insNetwork = this.children[index] as InsNetwork;
-      insNetwork.destroy();
+      // insNetwork.destroy();
+      insNetwork.remove();
+
       // insNetwork.redraw();
     }
     this.drawProcedure(this.ldData);
