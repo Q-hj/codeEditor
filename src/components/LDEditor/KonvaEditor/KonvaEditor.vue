@@ -17,9 +17,13 @@ const { ldData } = useAppStore();
 
 console.log(ldData);
 
+/** 画布总宽度 */
 const allWidth = ldData[0].content.length * blockConfig.width();
 
+/** 画布总高度 */
 const allHeight = ldData.length * networkConfig.height();
+
+console.log([allWidth, allHeight]);
 
 let stage: Procedure;
 
@@ -68,9 +72,18 @@ onMounted(() => {
   resizeObserver.observe(scrollContainer);
 
   // # 监听容器的滚动条高度来重新绘制内容
-  const repositionStage = debounce(() => {
+  const repositionStage = () => {
+    // stage
+    //   .container()
+    //   .querySelectorAll('canvas')!
+    //   .forEach((c) => {
+    //     c.getContext('2d')?.clearRect(0, 0, c.width, c.height);
+    //   });
+
     const x = scrollContainer.scrollLeft;
     const y = scrollContainer.scrollTop;
+
+    // console.log([x, y]);
 
     // 让stage始终处于可见区域
     stage.container().style.transform = 'translate(' + x + 'px, ' + y + 'px)';
@@ -79,9 +92,19 @@ onMounted(() => {
     stage.setAttrs({ x: -x, y: -y });
 
     stage.redraw(stage);
-  }, 50);
-
-  scrollContainer.addEventListener('scroll', repositionStage);
+  };
+  let isUpdate = false;
+  function update() {
+    if (isUpdate) {
+      repositionStage();
+      isUpdate = false;
+    }
+    requestAnimationFrame(update);
+  }
+  update();
+  scrollContainer.addEventListener('scroll', () => {
+    isUpdate = true;
+  });
 
   // repositionStage();
 });

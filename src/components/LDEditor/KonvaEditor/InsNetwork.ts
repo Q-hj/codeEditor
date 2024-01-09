@@ -4,6 +4,8 @@ import { InsBlock } from './InsBlock';
 
 import { LdData } from '@/types/ldData';
 
+import { NetworkCommnet } from './NetworkCommnet';
+
 import { blockConfig, drawConfig, networkConfig } from './config';
 
 interface INetwork {
@@ -16,7 +18,7 @@ interface INetwork {
 }
 
 /** 网络 */
-export class InsNetwork extends Konva.Layer implements INetwork {
+export class InsNetwork extends Konva.Group implements INetwork {
   networkIndex: number;
   network: LdData;
 
@@ -39,81 +41,43 @@ export class InsNetwork extends Konva.Layer implements INetwork {
   /** 绘制网络 */
   drawInsNetwork() {
     const network = this.network;
+
     const networkIndex = this.networkIndex;
+
     // * 绘制注释
-    // this.add(new NetworkCommnet(networkIndex));
+    // todo 可见区域渲染
+    this.add(new NetworkCommnet(networkIndex));
 
-    // const visibleGroups = [];
+    /** 画布宽度 */
+    const stageWidth = this.stage?.width() || drawConfig.width;
 
-    // 遍历指令集列表
+    /** 画布水平坐标 */
+    const x = this.stage?.x();
+
+    /** 最小临界值 */
+    const minX = x ? -x : 0;
+    /** 最大临界值 */
+    const maxX = minX + stageWidth;
+
+    // * 遍历指令集列表
     for (let insIndex = 0; insIndex < network.content.length; insIndex++) {
       const instruct = network.content[insIndex];
 
-      // todo 跳过绘制显示区域外的指令
-      if (!this.isVisibleArea(insIndex)) continue;
+      /** 指令块起始X坐标 */
+      const startX = blockConfig.width() * insIndex;
+      /** 指令块结束X坐标 */
+      const endX = blockConfig.width() * (insIndex + 1);
+
+      /** 是否在水平边界内 */
+      const flagX = startX < maxX && endX > minX;
+
+      if (!flagX) continue;
+
       // * 绘制各类型指令
 
-      // 功能块
+      // 3 功能块
       if (instruct.InsType === 3)
         this.add(new InsBlock(instruct, insIndex, networkIndex));
     }
-  }
-
-  /** 是否在可见区域内 */
-  isVisibleArea(insIndex: number) {
-    const state = this.stage;
-
-    /** 画布初始宽度 */
-    const defaultWidth = drawConfig.width;
-    const defaultHeight = drawConfig.height;
-
-    /** 指令起始坐标 */
-    const insX = blockConfig.width() * insIndex;
-    const insY = networkConfig.height() * this.networkIndex;
-
-    const { x, y } = state?.getClientRect() || {};
-
-    // console.log(x);
-
-    //-1: x最小值为-0.5 ？
-
-    // 缓冲值
-    const bufferValue = 100;
-
-    const minX = x ? -x - bufferValue : 0;
-    const minY = y ? -y - bufferValue : 0;
-    const maxX = minX + defaultWidth + bufferValue;
-    const maxY = minY + defaultHeight + bufferValue;
-
-    // console.log(minX);
-    // console.log(maxX);
-
-    if (insIndex) {
-      // console.log(insY);
-      // console.log(insX >= minX && insX <= maxX);
-    }
-    /** 是否在水平坐标内 */
-    const flagX = insX >= minX && insX <= maxX;
-    /** 是否在垂直坐标内 */
-    const flagY = insY >= minY && insY <= maxY;
-    return flagX;
-  }
-
-  /** 重新绘制网络内容 */
-  redraw(stage: Konva.Stage) {
-    this.stage = stage;
-    // for (let index = 0; index < this.children.length; index++) {
-    //   const group = this.children[index];
-    //   group.remove();
-    // }
-    // console.log(this.children);
-    // this.clear({
-    //   x: 0,
-    //   y: 0,
-    //   width,
-    //   height,
-    // });
-    // this.drawInsNetwork();
-    // stage.batchDraw();
   }
 }

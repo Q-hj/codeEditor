@@ -4,10 +4,11 @@ import { LdData } from '@/types/ldData';
 
 import { InsNetwork } from './InsNetwork';
 
-import { networkConfig } from './config';
+import { drawConfig, networkConfig } from './config';
 
 interface IProcedure {
   stage: Konva.Stage | null;
+  layer: Konva.Layer;
   /** 梯形图数据 */
   ldData: LdData[];
 }
@@ -25,12 +26,20 @@ interface ProcedureProps {
 /** 梯形图程序 */
 export class Procedure extends Konva.Stage implements IProcedure {
   ldData: LdData[];
+  layer: Konva.Layer;
   stage: Konva.Stage | null;
 
   constructor(props: ProcedureProps, ldData: LdData[]) {
     super(props);
 
     this.stage = null;
+
+    // 创建图层
+    this.layer = new Konva.Layer();
+
+    // 将图层添加到 Stage 上
+    this.add(this.layer);
+
     this.ldData = ldData;
 
     // # 绘制矩形选中边框
@@ -38,32 +47,52 @@ export class Procedure extends Konva.Stage implements IProcedure {
 
     // # 绘制网络
     this.drawProcedure(ldData);
-
-    // # 绘制垂直滚动条
-    // drawVerticalBar(this, ldData.length);
   }
 
   /** 绘制梯形图内容 */
   drawProcedure(ldData: LdData[]) {
+    /** 画布垂直坐标 */
+    const y = this.stage?.y();
+
+    /** 画布高度 */
+    const stageHeight = this.stage?.height() || drawConfig.height;
+
+    /** 最小临界值 */
+    const minY = y ? -y : 0;
+    /** 最大临界值 */
+    const maxY = minY + stageHeight;
+
+    /** 网络高度 */
+    const networkHeight = networkConfig.height();
+
     // * 遍历网络列表
     for (let index = 0; index < ldData.length; index++) {
       const network = ldData[index];
 
-      this.add(new InsNetwork(network, index, this.stage));
+      /** 起始Y坐标 */
+      const startY = networkHeight * index;
+      /** 结束Y坐标 */
+      const endY = networkHeight * (index + 1);
+
+      /** 是否在可视区域垂直边界内 */
+      const flagY = startY < maxY && endY > minY;
+
+      if (!flagY) continue;
+
+      // * 绘制网络
+      this.layer.add(new InsNetwork(network, index, this.stage));
     }
+
+    // console.log(this.layer.children.length);
   }
 
   /** 重新绘制内容 */
   redraw(stage: Konva.Stage | null) {
     this.stage = stage;
 
-    for (let index = 0; index < this.children.length; index++) {
-      const insNetwork = this.children[index] as InsNetwork;
-      // insNetwork.destroy();
-      insNetwork.remove();
+    // 清除图层全部内容
+    this.layer.destroyChildren();
 
-      // insNetwork.redraw();
-    }
     this.drawProcedure(this.ldData);
 
     // stage.batchDraw();
