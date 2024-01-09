@@ -23,13 +23,15 @@ const allWidth = ldData[0].content.length * blockConfig.width();
 /** 画布总高度 */
 const allHeight = ldData.length * networkConfig.height();
 
-console.log([allWidth, allHeight]);
+console.log(`画布实际内容大小：\n${allWidth}*${allHeight}`);
 
 let stage: Procedure;
 
 const sectionRef = ref<HTMLElement>();
 
 onMounted(() => {
+  document.querySelector('#paramsInput').focus();
+
   const scrollContainer = sectionRef.value!;
 
   const width = scrollContainer.clientWidth;

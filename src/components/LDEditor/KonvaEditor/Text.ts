@@ -27,20 +27,22 @@ export class Text extends Konva.Text {
       document.body.style.cursor = 'default';
     });
 
-    this.on('click', () => {
-      console.log(this.getClientRect());
-    });
-
     // 双击
-    this.on('dblclick', () => {
+    // this.on('dblclick', (event) => {
+    //   const { x, y } = this.getClientRect();
+    // });
+
+    // 点击事件
+    this.on('click', () => {
       const { x, y } = this.getClientRect();
 
-      console.log(this.getClientRect());
+      const stageX = this.getStage()?.x() || 0;
+      const stageY = this.getStage()?.y() || 0;
 
       const { align } = this.getAttrs();
 
       // 显示编辑框
-      showInput(this, x, y, align);
+      showInput(this, x - stageX, y - stageY, align);
     });
   }
 }

@@ -92,6 +92,7 @@ export class Procedure extends Konva.Stage implements IProcedure {
 
     // 清除图层全部内容
     this.layer.destroyChildren();
+    // this.layer.removeChildren();//不会销毁对象实例
 
     this.drawProcedure(this.ldData);
 
@@ -125,15 +126,24 @@ export class Procedure extends Konva.Stage implements IProcedure {
         return;
       }
 
-      // 将选中框图形移动至当前指令块
-      dashLine.moveTo(target.parent);
-
       // 获取矩形
       const rect = target.parent.findOne('Rect');
 
       if (!rect) return;
 
+      // 将选中框图形移动至当前指令块
+      // dashLine.moveTo(target.parent);
+      target.parent.add(dashLine);
+
       const { x, y, width, height } = rect.attrs;
+
+      // 克隆选中框图形（需销毁原来的选中框）
+      // const dashLineClone = dashLine.clone({
+      //   visible: true,
+      //   points: [
+      //      ...
+      //   ],
+      // });
 
       dashLine.visible(true);
 
