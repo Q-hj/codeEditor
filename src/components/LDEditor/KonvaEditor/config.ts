@@ -1,9 +1,9 @@
 /** 画布基本配置 */
 export const drawConfig = {
   /** 画布宽度 */
-  width: 0,
-  /** 画布高度 */
-  height: 0,
+  // width: 0,
+  // /** 画布高度 */
+  // height: 0,
 
   /** 单元格宽度 */
   rowWidth: 40,
@@ -91,7 +91,19 @@ export const paramsConfig = {
   interval: 80,
 
   /** 参数文本宽度 */
-  width: 100,
+  width: 50,
+
+  /** 参数文本大小 */
+  fontSize: 16,
 
   startX: function () {},
 };
+
+// ? 使用类来构造生成配置项
+// export class ParamsConfig {
+//   constructor() {
+//     this.interval = 80;
+//     this.width = 100;
+//     this.fontSize = 16;
+//   }
+// }
