@@ -31,23 +31,36 @@
 
 层级：
 
-Network
+Procedure（程序）
+
+> 对应Konva.Stage，包含一个Konva.Layer（图层）
+
+- Network
 
 > 对应Konva.Layer
 
-- Instruction
+- InsBlock （功能块）
 
   > 对应Konva.Group
 
-  - InsBlock （功能块）
+  - InsParmas （参数列表）
 
-    - InsParmas （参数列表）
+    - InsText （可编辑文本）
+      > 对应Konva.Text
 
-      - InsText （可编辑文本）
+  - 连接线
 
-    - 连接线
+- InsCoil （线圈）
+  - 连接线
+- InsContact （触点）
+  - 连接线
 
-  - InsCoil （线圈）
-    - 连接线
-  - InsContact （触点）
-    - 连接线
+## 功能
+
+- 内容滚动
+
+- 可视区域渲染
+
+- 拖拽
+
+- 选中效果
