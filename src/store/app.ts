@@ -55,9 +55,9 @@ const network = {
 
 const ldData: LdData[] = [];
 
-for (let index = 0; index < 10; index++) {
+for (let index = 0; index < 1000; index++) {
   const content = [];
-  for (let j = 0; j < 10; j++) {
+  for (let j = 0; j < 1000; j++) {
     content.push({
       InsId: 5,
       InsName: 'NCR',
