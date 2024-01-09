@@ -9,7 +9,7 @@ import useInput from '@/hooks/useInput';
 
 import { useAppStore } from '@/store/app';
 
-import { blockConfig, drawConfig, networkConfig } from './config';
+import { blockConfig, networkConfig } from './config';
 
 const { handleInputChange } = useInput();
 
@@ -30,8 +30,6 @@ let stage: Procedure;
 const sectionRef = ref<HTMLElement>();
 
 onMounted(() => {
-  document.querySelector('#paramsInput').focus();
-
   const scrollContainer = sectionRef.value!;
 
   const width = scrollContainer.clientWidth;
@@ -40,7 +38,7 @@ onMounted(() => {
   // console.log(height);
 
   /** 修改全局配置 */
-  Object.assign(drawConfig, { width, height });
+  // Object.assign(drawConfig, { width, height });
 
   stage = new Procedure(
     {
@@ -55,13 +53,14 @@ onMounted(() => {
   let flag = true;
   const handleContainerResize = debounce((width, height) => {
     /** 修改全局配置 */
-    Object.assign(drawConfig, { width, height });
+    // Object.assign(drawConfig, { width, height });
+
     if (flag) return (flag = false);
 
     /** 更新stage尺寸 */
     stage.setAttrs({ width, height });
 
-    stage.redraw(stage);
+    stage.redraw();
   }, 50);
 
   // 创建ResizeObserver实例
@@ -75,17 +74,8 @@ onMounted(() => {
 
   // # 监听容器的滚动条高度来重新绘制内容
   const repositionStage = () => {
-    // stage
-    //   .container()
-    //   .querySelectorAll('canvas')!
-    //   .forEach((c) => {
-    //     c.getContext('2d')?.clearRect(0, 0, c.width, c.height);
-    //   });
-
     const x = scrollContainer.scrollLeft;
     const y = scrollContainer.scrollTop;
-
-    // console.log([x, y]);
 
     // 让stage始终处于可见区域
     stage.container().style.transform = 'translate(' + x + 'px, ' + y + 'px)';
@@ -93,7 +83,7 @@ onMounted(() => {
     /** 更新stage坐标 */
     stage.setAttrs({ x: -x, y: -y });
 
-    stage.redraw(stage);
+    stage.redraw();
   };
   let isUpdate = false;
   function update() {

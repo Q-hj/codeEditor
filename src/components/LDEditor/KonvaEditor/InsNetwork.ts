@@ -6,10 +6,12 @@ import { LdData } from '@/types/ldData';
 
 import { NetworkCommnet } from './NetworkCommnet';
 
-import { blockConfig, drawConfig, networkConfig } from './config';
+import { blockConfig, networkConfig } from './config';
 
 interface INetwork {
-  stage: Konva.Stage | null;
+  /** 舞台 */
+  stage: Konva.Stage;
+
   /** 网络数据 */
   network: LdData;
 
@@ -22,19 +24,19 @@ export class InsNetwork extends Konva.Group implements INetwork {
   networkIndex: number;
   network: LdData;
 
-  stage: Konva.Stage | null;
+  stage: Konva.Stage;
 
-  constructor(
-    network: LdData,
-    networkIndex: number,
-    stage: Konva.Stage | null,
-  ) {
+  constructor(network: LdData, networkIndex: number, stage: Konva.Stage) {
     super({
       y: networkIndex * networkConfig.height(),
     });
+
     this.stage = stage;
+
     this.network = network;
+
     this.networkIndex = networkIndex;
+
     this.drawInsNetwork();
   }
 
@@ -49,10 +51,10 @@ export class InsNetwork extends Konva.Group implements INetwork {
     this.add(new NetworkCommnet(networkIndex));
 
     /** 画布宽度 */
-    const stageWidth = this.stage?.width() || drawConfig.width;
+    const stageWidth = this.stage.width();
 
     /** 画布水平坐标 */
-    const x = this.stage?.x();
+    const x = this.stage.x();
 
     /** 最小临界值 */
     const minX = x ? -x : 0;

@@ -4,10 +4,10 @@ import { LdData } from '@/types/ldData';
 
 import { InsNetwork } from './InsNetwork';
 
-import { drawConfig, networkConfig } from './config';
+import { networkConfig } from './config';
 
+/** 梯形图程序 */
 interface IProcedure {
-  stage: Konva.Stage | null;
   layer: Konva.Layer;
   /** 梯形图数据 */
   ldData: LdData[];
@@ -27,12 +27,9 @@ interface ProcedureProps {
 export class Procedure extends Konva.Stage implements IProcedure {
   ldData: LdData[];
   layer: Konva.Layer;
-  stage: Konva.Stage | null;
 
   constructor(props: ProcedureProps, ldData: LdData[]) {
     super(props);
-
-    this.stage = null;
 
     // 创建图层
     this.layer = new Konva.Layer();
@@ -52,10 +49,10 @@ export class Procedure extends Konva.Stage implements IProcedure {
   /** 绘制梯形图内容 */
   drawProcedure(ldData: LdData[]) {
     /** 画布垂直坐标 */
-    const y = this.stage?.y();
+    const y = this.y();
 
     /** 画布高度 */
-    const stageHeight = this.stage?.height() || drawConfig.height;
+    const stageHeight = this.height();
 
     /** 最小临界值 */
     const minY = y ? -y : 0;
@@ -80,16 +77,14 @@ export class Procedure extends Konva.Stage implements IProcedure {
       if (!flagY) continue;
 
       // * 绘制网络
-      this.layer.add(new InsNetwork(network, index, this.stage));
+      this.layer.add(new InsNetwork(network, index, this));
     }
 
     // console.log(this.layer.children.length);
   }
 
   /** 重新绘制内容 */
-  redraw(stage: Konva.Stage | null) {
-    this.stage = stage;
-
+  redraw() {
     // 清除图层全部内容
     this.layer.destroyChildren();
     // this.layer.removeChildren();//不会销毁对象实例
